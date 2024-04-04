@@ -11,4 +11,4 @@ set(EXECUTABLE_OUTPUT_PATH ../)
 
 add_compile_options(-g -O0)
 
-add_executable(inference inference.cpp)
+add_executable(inference inference.cpp tensor.cpp node.cpp layer.cpp graph.cpp)
