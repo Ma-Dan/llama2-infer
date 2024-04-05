@@ -9,9 +9,9 @@ class Input: public Layer
 {
     public:
         Input();
-        void forward();
+        void forward(vector<Tensor*> &input, Tensor* output);
 
-        static int CreateInstance(Layer& layer);
+        static int CreateInstance(Layer* &layer);
 };
 
 #endif

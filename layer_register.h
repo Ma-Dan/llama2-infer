@@ -12,13 +12,13 @@ using namespace std;
 class LayerRegister
 {
     public:
-        typedef int (*Creator)(Layer& layer);
+        typedef int (*Creator)(Layer* &layer);
         typedef map<string, Creator> CreatorRegistry;
         static CreatorRegistry *registry_;
 
         static CreatorRegistry* Registry();
         static void RegisterCreator(const string& layer_type, const Creator &creator);
-        static void CreateLayer(const string& layer_type, Layer& layer);
+        static void CreateLayer(const string& layer_type, Layer* &layer);
 };
 
 class LayerRegistererWrapper
@@ -33,7 +33,7 @@ class LayerRegistererWrapper
 class CreateLayerWrapper
 {
     public:
-        explicit CreateLayerWrapper(const string& layer_type, Layer& layer)
+        explicit CreateLayerWrapper(const string& layer_type, Layer* &layer)
         {
             LayerRegister::CreateLayer(layer_type, layer);
         }

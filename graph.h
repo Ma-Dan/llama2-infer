@@ -12,6 +12,7 @@ class Graph
 {
     public:
         Graph();
+        ~Graph();
 
         int load_param(string file_name);
 

@@ -208,8 +208,10 @@ int main(int argc, char** argv) {
     // std::cout << std::endl;
 
     // 加载模型
-    Graph graph;
-    graph.load_param(model_name+".param");
+    Graph* graph = new Graph();
+    graph->load_param(model_name);
+
+    delete graph;
 
     exit(0);
 }

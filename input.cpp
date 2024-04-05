@@ -6,13 +6,14 @@ Input::Input()
 
 }
 
-void Input::forward()
+void Input::forward(vector<Tensor*> &input, Tensor* output)
 {
 
 }
 
-int Input::CreateInstance(Layer& layer)
+int Input::CreateInstance(Layer* &layer)
 {
+    layer = new Input();
     return 0;
 }
 

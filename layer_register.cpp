@@ -18,7 +18,7 @@ void LayerRegister::RegisterCreator(const string& layer_type, const Creator &cre
     registry->insert({layer_type, creator});
 }
 
-void LayerRegister::CreateLayer(const string& layer_type, Layer& layer)
+void LayerRegister::CreateLayer(const string& layer_type, Layer* &layer)
 {
     CreatorRegistry* registry = Registry();
     (*registry)[layer_type](layer);
