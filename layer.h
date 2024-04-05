@@ -11,7 +11,9 @@ class Layer
         Layer();
         virtual void forward();
 
-    private:
+        static int CreateInstance(Layer& layer);
+
+    protected:
         std::vector<Tensor> input;
         Tensor output;
 };

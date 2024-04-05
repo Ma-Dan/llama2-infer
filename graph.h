@@ -3,15 +3,20 @@
 
 #include <vector>
 
+using namespace std;
+
 #include "node.h"
+#include "layer_register.h"
 
 class Graph
 {
     public:
         Graph();
 
+        int load_param(string file_name);
+
     private:
-        std::vector<Node> nodes;
+        vector<Node*> nodes;
 };
 
 #endif

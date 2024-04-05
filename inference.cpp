@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "graph.h"
+
 const int vocab_size = 32000;
 
 const float temp = 1, topp = 0.9;
@@ -189,7 +191,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::string model_bin = argv[1], model_param = argv[1],
+    std::string model_name = argv[1],
                 tokenizer_path = "tokenizer.bin", prompt = argv[2];
     int token_count = std::stoi(argv[3]);
 
@@ -204,6 +206,10 @@ int main(int argc, char** argv) {
 
     // for (int i = 0; i < token_count; i++) std::cout << tokens[i] << " ";
     // std::cout << std::endl;
+
+    // 加载模型
+    Graph graph;
+    graph.load_param(model_name+".param");
 
     exit(0);
 }
