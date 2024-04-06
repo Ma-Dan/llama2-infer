@@ -13,12 +13,12 @@ class Embed: public Layer
         ~Embed();
 
         int load_model(const vector<string> &params, FILE* fp);
-        void forward(vector<Tensor*> &input, Tensor* output);
+        void forward(vector<Tensor*> &input, vector<Tensor*> &output);
 
         static int CreateInstance(Layer* &layer);
 
     private:
-        Tensor* weight;
+        Tensor* _weight;
 };
 
 #endif

@@ -15,7 +15,7 @@ int Layer::load_model(const vector<string> &params, FILE* fp)
     return 0;
 }
 
-void Layer::forward(vector<Tensor*> &input, Tensor* output)
+void Layer::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 {
 
 }

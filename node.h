@@ -9,21 +9,26 @@ using namespace std;
 #include "tensor.h"
 #include "layer.h"
 
+class Graph;
+
 class Node
 {
     public:
-        Node(const string &layer_type, const string &node_name);
+        Node(Graph* graph, const vector<string> params);
         ~Node();
 
         int load_model(const vector<string> params, FILE *fp);
-
         void forward();
+        vector<string> get_input_names();
 
     private:
-        string name;
-        vector<Tensor*> input;
-        Tensor* output;
-        Layer* layer;
+        Graph* _graph;
+        string _name;
+        vector<string> _input_names;
+        vector<string> _output_names;
+        vector<Tensor*> _inputs;
+        vector<Tensor*> _outputs;
+        Layer* _layer;
 };
 
 #endif

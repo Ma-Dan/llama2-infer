@@ -9,7 +9,7 @@ class Input: public Layer
 {
     public:
         Input();
-        void forward(vector<Tensor*> &input, Tensor* output);
+        void forward(vector<Tensor*> &input, vector<Tensor*> &output);
 
         static int CreateInstance(Layer* &layer);
 };

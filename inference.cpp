@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "tensor.h"
 #include "graph.h"
 
 const int vocab_size = 32000;
@@ -209,7 +210,17 @@ int main(int argc, char** argv) {
 
     // 加载模型
     Graph* graph = new Graph();
-    graph->load_param(model_name);
+    graph->load_model(model_name);
+
+    Tensor* inputTensor = new Tensor();
+    vector<float> inputData;
+    inputData.push_back(1.0);
+    inputTensor->set_data(inputData);
+
+    graph->input("in", inputTensor);
+
+    Tensor* output;
+    graph->extract("1", output);
 
     delete graph;
 

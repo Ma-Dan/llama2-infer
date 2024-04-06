@@ -1,15 +1,15 @@
 #include "layer_register.h"
 
-LayerRegister::CreatorRegistry* LayerRegister::registry_ = nullptr;
+LayerRegister::CreatorRegistry* LayerRegister::_registry = nullptr;
 
 LayerRegister::CreatorRegistry* LayerRegister::Registry()
 {
-    if(nullptr == registry_)
+    if(nullptr == _registry)
     {
-        registry_ = new CreatorRegistry();
+        _registry = new CreatorRegistry();
     }
 
-    return registry_;
+    return _registry;
 }
 
 void LayerRegister::RegisterCreator(const string& layer_type, const Creator &creator)

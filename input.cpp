@@ -6,7 +6,7 @@ Input::Input()
 
 }
 
-void Input::forward(vector<Tensor*> &input, Tensor* output)
+void Input::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 {
 
 }

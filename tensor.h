@@ -13,10 +13,13 @@ class Tensor
 
         int set_shape(const vector<int> shape);
         int load_data(FILE *fp);
+        void set_data(const vector<float> data);
+        vector<float> get_data();
+        vector<int> get_shape();
 
     private:
-        std::vector<int> shape_;
-        std::vector<float> data_;
+        vector<int> _shape;
+        vector<float> _data;
 
         void clear();
 };

@@ -14,7 +14,7 @@ class LayerRegister
     public:
         typedef int (*Creator)(Layer* &layer);
         typedef map<string, Creator> CreatorRegistry;
-        static CreatorRegistry *registry_;
+        static CreatorRegistry *_registry;
 
         static CreatorRegistry* Registry();
         static void RegisterCreator(const string& layer_type, const Creator &creator);
