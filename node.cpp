@@ -1,6 +1,7 @@
 #include "node.h"
 #include "layer_register.h"
 #include "graph.h"
+#include "utils.h"
 
 Node::Node(Graph* graph, const vector<string> params)
 {
@@ -30,7 +31,7 @@ Node::Node(Graph* graph, const vector<string> params)
 
 Node::~Node()
 {
-    delete _layer;
+    SAFE_DELETE(_layer);
 }
 
 int Node::load_model(const vector<string> params, FILE *fp)

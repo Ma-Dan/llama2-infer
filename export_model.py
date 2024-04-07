@@ -30,7 +30,10 @@ def export_model(checkpoint, filepath):
 
     out_file = open(filepath, 'wb')
 
+    #TODO: 目前在手动编制结构阶段,后面需要按照结构导出结构和权重数据
     serialize_fp32(out_file, model.tok_embeddings.weight)
+
+    serialize_fp32(out_file, model.layers[0].attention_norm.state_dict()['weight'])
 
     out_file.close()
 

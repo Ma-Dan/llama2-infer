@@ -12,9 +12,9 @@ class Tensor
         ~Tensor();
 
         int set_shape(const vector<int> shape);
-        int load_data(FILE *fp);
+        int load_data(FILE *fp, long offset);
         void set_data(const vector<float> data);
-        vector<float> get_data();
+        vector<float>* get_data();
         vector<int> get_shape();
 
     private:

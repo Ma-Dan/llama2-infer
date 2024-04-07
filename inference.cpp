@@ -220,7 +220,7 @@ int main(int argc, char** argv) {
     graph->input("in", inputTensor);
 
     Tensor* output;
-    graph->extract("1", output);
+    graph->extract("8", output);
 
     delete graph;
 

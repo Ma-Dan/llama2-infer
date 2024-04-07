@@ -17,7 +17,7 @@ Graph::~Graph()
 {
     for(int i=0; i<_nodes.size(); i++)
     {
-        delete _nodes[i];
+        SAFE_DELETE(_nodes[i]);
     }
 
     _nodes.clear();
@@ -79,7 +79,7 @@ void Graph::register_operand(string operand_name, Tensor* operand_tensor)
         return;
     }
 
-    delete _operand_map[operand_name];
+    SAFE_DELETE(_operand_map[operand_name]);
     _operand_map[operand_name] = operand_tensor;
 }
 
@@ -97,7 +97,7 @@ void Graph::input(string operand_name, Tensor* input_tensor)
     {
         if(_operand_map[operand_name] != nullptr)
         {
-            delete _operand_map[operand_name];
+            SAFE_DELETE(_operand_map[operand_name]);
         }
     }
 
