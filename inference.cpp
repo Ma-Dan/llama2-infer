@@ -224,7 +224,7 @@ int main(int argc, char** argv) {
     graph->input("in", inputTensor);
 
     Tensor* output;
-    graph->extract("8", output);
+    graph->extract("10", output);
 
     delete graph;
 

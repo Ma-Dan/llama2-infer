@@ -11,4 +11,4 @@ set(EXECUTABLE_OUTPUT_PATH ../)
 
 add_compile_options(-g -O0)
 
-add_executable(inference inference.cpp utils.cpp tensor.cpp node.cpp layer.cpp layer_register.cpp graph.cpp input.cpp embed.cpp unaryop.cpp binaryop.cpp reduction.cpp memorydata.cpp)
+add_executable(inference inference.cpp utils.cpp tensor.cpp node.cpp layer.cpp layer_register.cpp graph.cpp input.cpp embed.cpp unaryop.cpp binaryop.cpp reduction.cpp memorydata.cpp matmul.cpp)
