@@ -33,13 +33,15 @@ int Embed::load_model(const vector<string> &params, FILE* fp)
 
 void Embed::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 {
-    int index = (int)((*(input[0]->get_data()))[0]);
+    //TODO:更多的shape处理
+    //暂时按照 长度 一个维度处理
+    int dim0 = input[0]->get_shape()[0];
 
     vector<int> shape;
+    shape.push_back(dim0);
     shape.push_back(_weight->get_shape()[1]);
 
     Tensor* result;
-
     if(output[0] == nullptr)
     {
         result = new Tensor();
@@ -50,9 +52,13 @@ void Embed::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     }
 
     result->set_shape(shape);
-
     vector<float>* data = result->get_data();
-    memcpy(data->data(), &_weight->get_data()->data()[index*shape[0]], sizeof(float)*shape[0]);
+
+    for(int i=0; i<dim0; i++)
+    {
+        int index = (int)((*(input[0]->get_data()))[i]);
+        memcpy(&data->data()[i*shape[1]], &_weight->get_data()->data()[index*shape[1]], sizeof(float)*shape[1]);
+    }
 
     output[0] = result;
 }

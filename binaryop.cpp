@@ -113,48 +113,128 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     if(_param_type == 1)
     {
         //简单分为两种情况
-        //形状不同 input0 乘以 input1的第一个元素
-        //形状相同 逐个相乘
         if(!is_same_shape(input[0]->get_shape(), input[1]->get_shape()))
         {
+            //形状不同 input0 按照相等维度处理
             result->set_shape(input[0]->get_shape());
             vector<float>* input0Data = input[0]->get_data();
             vector<float>* input1Data = input[1]->get_data();
             vector<float>* outputData = result->get_data();
 
-            float param = input1Data->data()[0];
+            vector<int> input0Shape = input[0]->get_shape();
+            vector<int> input1Shape = input[1]->get_shape();
+
+            //TODO:处理更多维度情况
+            //目前只处理了两种情况，一片数据-一个值 一片数据-一片值
+            int situation = -1;
+            if(input0Shape[0] == input1Shape[0])
+            {
+                situation = 0;
+            }
+            else if(input0Shape[1] == input1Shape[0])
+            {
+                situation = 1;
+            }
+            else
+            {
+                return;
+            }
 
             switch(_op_type)
             {
                 case 0:
                     {
-                        for(int i=0; i<outputData->size(); i++)
+                        if(situation == 0)
                         {
-                            outputData->data()[i] = input0Data->data()[i] + param;
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] + input1Data->data()[i];
+                                }
+                            }
+                        }
+                        else if(situation == 1)
+                        {
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] + input1Data->data()[j];
+                                }
+                            }
                         }
                     }
                     break;
                 case 1:
                     {
-                        for(int i=0; i<outputData->size(); i++)
+                        if(situation == 0)
                         {
-                            outputData->data()[i] = input0Data->data()[i] - param;
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] - input1Data->data()[i];
+                                }
+                            }
+                        }
+                        else if(situation == 1)
+                        {
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] - input1Data->data()[j];
+                                }
+                            }
                         }
                     }
                     break;
                 case 2:
                     {
-                        for(int i=0; i<outputData->size(); i++)
+                        if(situation == 0)
                         {
-                            outputData->data()[i] = input0Data->data()[i] * param;
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] * input1Data->data()[i];
+                                }
+                            }
+                        }
+                        else if(situation == 1)
+                        {
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] * input1Data->data()[j];
+                                }
+                            }
                         }
                     }
                     break;
                 case 3:
                     {
-                        for(int i=0; i<outputData->size(); i++)
+                        if(situation == 0)
                         {
-                            outputData->data()[i] = input0Data->data()[i] / param;
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] / input1Data->data()[i];
+                                }
+                            }
+                        }
+                        else if(situation == 1)
+                        {
+                            for(int i=0; i<input0Shape[0]; i++)
+                            {
+                                for(int j=0; j<input0Shape[1]; j++)
+                                {
+                                    outputData->data()[i*input0Shape[1]+j] = input0Data->data()[i*input0Shape[1]+j] / input1Data->data()[j];
+                                }
+                            }
                         }
                     }
                     break;
@@ -166,6 +246,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         }
         else
         {
+            //形状相同 逐个计算
             result->set_shape(input[0]->get_shape());
             vector<float>* input0Data = input[0]->get_data();
             vector<float>* input1Data = input[1]->get_data();

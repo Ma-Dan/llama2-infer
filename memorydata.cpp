@@ -36,7 +36,7 @@ int MemoryData::load_model(const vector<string> &params, FILE* fp)
 
 void MemoryData::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 {
-    Tensor* result;
+    /*Tensor* result;
 
     if(output[0] == nullptr)
     {
@@ -52,7 +52,9 @@ void MemoryData::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     vector<float>* data = result->get_data();
     memcpy(data->data(), &_weight->get_data()->data()[0], sizeof(float)*_weight->get_data()->size());
 
-    output[0] = result;
+    output[0] = result;*/
+    //TODO:暂时改成这样避免数据复制
+    output[0] = _weight;
 }
 
 int MemoryData::CreateInstance(Layer* &layer)

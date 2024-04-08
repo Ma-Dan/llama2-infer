@@ -27,33 +27,49 @@ int Reduction::load_model(const vector<string> &params, FILE* fp)
 
 void Reduction::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 {
-    if(_reduce_type==0 && _dim == -1)
+    Tensor* result;
+    if(output[0] == nullptr)
     {
-        Tensor* result;
+        result = new Tensor();
+    }
+    else
+    {
+        result = output[0];
+    }
 
-        if(output[0] == nullptr)
+    vector<float>* inputData = input[0]->get_data();
+    vector<float>* outputData = result->get_data();
+
+    if(_reduce_type == 0)
+    {
+        //TODO:处理维度更多情况
+        vector<int> inputShape = input[0]->get_shape();
+        vector<int> outputShape;
+
+        int blocks = 1;
+        for(int i=0; i<_dim; i++)
         {
-            result = new Tensor();
+            outputShape.push_back(inputShape[i]);
+            blocks *= inputShape[i];
         }
-        else
+
+        int stride = 1;
+        for(int i=_dim; i<inputShape.size(); i++)
         {
-            result = output[0];
+            stride *= inputShape[i];
         }
 
-        vector<int> shape;
-        shape.push_back(1);
+        result->set_shape(outputShape);
 
-        result->set_shape(shape);
-
-        float sum = 0.0f;
-        vector<float>* inputData = input[0]->get_data();
-        for(int i=0; i<inputData->size(); i++)
+        for(int i=0; i<blocks; i++)
         {
-            sum += inputData->data()[i];
+            float sum = 0.0f;
+            for(int j=0; j<stride; j++)
+            {
+                sum += inputData->data()[i*stride+j];
+            }
+            outputData->data()[i] = sum / stride;
         }
-
-        vector<float>* outputData = result->get_data();
-        outputData->data()[0] = sum / inputData->size();
 
         output[0] = result;
     }

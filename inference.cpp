@@ -213,8 +213,12 @@ int main(int argc, char** argv) {
     graph->load_model(model_name);
 
     Tensor* inputTensor = new Tensor();
+    vector<int> inputShape;
     vector<float> inputData;
+    inputShape.push_back(2);
     inputData.push_back(1.0);
+    inputData.push_back(2.0);
+    inputTensor->set_shape(inputShape);
     inputTensor->set_data(inputData);
 
     graph->input("in", inputTensor);
