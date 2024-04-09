@@ -38,6 +38,10 @@ def export_model(checkpoint, filepath):
     serialize_fp32(out_file, model.layers[0].attention.wk.state_dict()['weight'])
     serialize_fp32(out_file, model.layers[0].attention.wv.state_dict()['weight'])
     serialize_fp32(out_file, model.layers[0].attention.wo.state_dict()['weight'])
+    serialize_fp32(out_file, model.layers[0].ffn_norm.state_dict()['weight'])
+    serialize_fp32(out_file, model.layers[0].feed_forward.w1.state_dict()['weight'])
+    serialize_fp32(out_file, model.layers[0].feed_forward.w3.state_dict()['weight'])
+    serialize_fp32(out_file, model.layers[0].feed_forward.w2.state_dict()['weight'])
 
     out_file.close()
 
