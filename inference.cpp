@@ -220,9 +220,14 @@ int main(int argc, char** argv) {
         }
     }
 
+    vector<int> kvcache_init_shape;
+    kvcache_init_shape.push_back(0);
+    kvcache_init_shape.push_back(dim);
     for (int i = 0; i < n_layers; i++) {
         kcache[i] = new Tensor();
         vcache[i] = new Tensor();
+        kcache[i]->set_shape(kvcache_init_shape);
+        vcache[i]->set_shape(kvcache_init_shape);
     }
 
     // tokenize prompt
@@ -241,7 +246,7 @@ int main(int argc, char** argv) {
     Graph* graph = new Graph();
     graph->load_model(model_name);
 
-    int pos = 30;
+    int pos = 0;
 
     Tensor freqs_cos;
     Tensor freqs_sin;
@@ -258,18 +263,25 @@ int main(int argc, char** argv) {
     Tensor inputTensor;
     vector<int> inputShape;
     vector<float> inputData;
-    inputShape.push_back(2);
+    inputShape.push_back(1);
     inputData.push_back(1.0);
-    inputData.push_back(2.0);
     inputTensor.set_shape(inputShape);
     inputTensor.set_data(inputData);
 
     graph->input("in", &inputTensor);
     graph->input("freqs_cos", &freqs_cos);
     graph->input("freqs_sin", &freqs_sin);
+    for(int i = 0; i < n_layers; i++)
+    {
+        auto layer_name = std::to_string(i);
+        auto kc_name = "k_cache_" + layer_name;
+        auto vc_name = "v_cache_" + layer_name;
+        graph->input(kc_name.c_str(), kcache[i]);
+        graph->input(vc_name.c_str(), vcache[i]);
+    }
 
     Tensor* output;
-    graph->extract("12", output);
+    graph->extract("17", output);
 
     delete graph;
 

@@ -31,3 +31,8 @@ MemoryData_t layer0_att_wq_weight 0 1 9 0=2 1=512 2=512 3=16384512
 Matmul_t layer0_att_q_matmul 2 1 8 9 10
 Reshape_t layer0_att_q_reshape 1 1 10 11 0=3 1=-1 2=8 3=64
 Posenc_t layer0_att_q_posenc 3 1 11 freqs_cos freqs_sin 12
+MemoryData_t layer0_att_wk_weight 0 1 13 0=2 1=512 2=512 3=16646656
+Matmul_t layer0_att_k_matmul 2 1 8 13 14
+Concat_t layer0_att_k_concat 2 1 k_cache_0 14 15 0=0
+Reshape_t layer0_att_k_reshape 1 1 15 16 0=3 1=-1 2=8 3=64
+Posenc_t layer0_att_k_posenc 3 1 16 freqs_cos freqs_sin 17
