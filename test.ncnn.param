@@ -1,8 +1,8 @@
 7767517
 8 1
 Input_t input 0 1 in
-Input_t freq_cos 0 1 freq_cos
-Input_t freq_cos 0 1 freq_sin
+Input_t freqs_cos 0 1 freqs_cos
+Input_t freqs_cos 0 1 freqs_sin
 Input_t k_cache_0 0 1 k_cache_0
 Input_t k_cache_1 0 1 k_cache_1
 Input_t k_cache_2 0 1 k_cache_2
@@ -30,3 +30,4 @@ BinaryOp_t layer0_attnorm_mul2 2 1 6 7 8 0=Mul 1=Tensor
 MemoryData_t layer0_att_wq_weight 0 1 9 0=2 1=512 2=512 3=16384512
 Matmul_t layer0_att_q_matmul 2 1 8 9 10
 Reshape_t layer0_att_q_reshape 1 1 10 11 0=3 1=-1 2=8 3=64
+Posenc_t layer0_att_q_posenc 3 1 11 freqs_cos freqs_sin 12

@@ -241,13 +241,13 @@ int main(int argc, char** argv) {
     Graph* graph = new Graph();
     graph->load_model(model_name);
 
-    int pos = 0;
+    int pos = 30;
 
     Tensor freqs_cos;
     Tensor freqs_sin;
     vector<int> posShape;
-    posShape.push_back(head_dim / 2);
     posShape.push_back(pos + 1);
+    posShape.push_back(head_dim / 2);
     freqs_cos.set_shape(posShape);
     freqs_sin.set_shape(posShape);
     for (int i = 0; i < (pos + 1) * head_dim / 2; i++) {
@@ -265,9 +265,11 @@ int main(int argc, char** argv) {
     inputTensor.set_data(inputData);
 
     graph->input("in", &inputTensor);
+    graph->input("freqs_cos", &freqs_cos);
+    graph->input("freqs_sin", &freqs_sin);
 
     Tensor* output;
-    graph->extract("11", output);
+    graph->extract("12", output);
 
     delete graph;
 
