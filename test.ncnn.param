@@ -47,3 +47,4 @@ Matmul_t layer0_att_qkv_matmul 2 1 24 20 25
 Reshape_t layer0_att_qkv_reshape 1 1 25 26 0=2 1=-1 2=512
 MemoryData_t layer0_att_wo_weight 0 1 27 0=2 1=512 2=512 3=17170944
 Matmul_t layer0_att_wo_matmul 2 1 26 27 28
+BinaryOp_t layer0_att_shortcut 2 1 1 28 29 0=Add 1=Tensor
