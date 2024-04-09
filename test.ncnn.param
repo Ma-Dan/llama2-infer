@@ -37,3 +37,5 @@ Concat_t layer0_att_k_concat 2 1 k_cache_0 14 15 0=0
 Reshape_t layer0_att_k_reshape 1 1 15 16 0=3 1=-1 2=8 3=64
 Posenc_t layer0_att_k_posenc 3 1 16 freqs_cos freqs_sin 17
 Matmul_t layer0_att_qk_matmul 2 1 17 12 18
+BinaryOp_t layer0_att_qk_div 1 1 18 19 0=Div 1=Param 2=8
+Softmax_t layer0_att_qk_softmax 1 1 19 20 0=0

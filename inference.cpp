@@ -281,7 +281,7 @@ int main(int argc, char** argv) {
     }
 
     Tensor* output;
-    graph->extract("18", output);
+    graph->extract("20", output);
 
     delete graph;
 
