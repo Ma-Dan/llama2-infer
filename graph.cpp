@@ -33,7 +33,7 @@ int Graph::load_model(string file_name)
 
     int index = 0;
     string strline;
-    while (getline(fin, strline) && index < 20)
+    while(getline(fin, strline))
     {
         if(index > 1)
         {
@@ -43,7 +43,7 @@ int Graph::load_model(string file_name)
             _nodes.push_back(node);
             cout << params[0] << endl;
         }
-        index ++;
+        index++;
     }
 
     fin.close();

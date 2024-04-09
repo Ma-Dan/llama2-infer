@@ -196,6 +196,35 @@ int main(int argc, char** argv) {
                 tokenizer_path = "tokenizer.bin", prompt = argv[2];
     int token_count = std::stoi(argv[3]);
 
+    // 模型的基本参数
+    int ctx_length, n_layers, dim, n_heads;
+    ctx_length = 256;
+    n_layers = 8;
+    dim = 512;
+    n_heads = 8;
+
+    std::vector<Tensor*> kcache, vcache;
+    std::vector<float> freqs_cos_table, freqs_sin_table;
+
+    kcache.resize(n_layers);
+    vcache.resize(n_layers);
+    int head_dim = dim / n_heads;
+    freqs_cos_table.resize(ctx_length * head_dim / 2);
+    freqs_sin_table.resize(ctx_length * head_dim / 2);
+
+    for (int i = 0; i < ctx_length; i++) {
+        for (int j = 0; j < head_dim / 2; j++) {
+            auto x = i / pow(10000.0, j * 2 / (double)head_dim);
+            freqs_cos_table[i * head_dim / 2 + j] = cos(x);
+            freqs_sin_table[i * head_dim / 2 + j] = sin(x);
+        }
+    }
+
+    for (int i = 0; i < n_layers; i++) {
+        kcache[i] = new Tensor();
+        vcache[i] = new Tensor();
+    }
+
     // tokenize prompt
     bpe tokenizer;
     tokenizer.load(tokenizer_path);
@@ -212,19 +241,33 @@ int main(int argc, char** argv) {
     Graph* graph = new Graph();
     graph->load_model(model_name);
 
-    Tensor* inputTensor = new Tensor();
+    int pos = 0;
+
+    Tensor freqs_cos;
+    Tensor freqs_sin;
+    vector<int> posShape;
+    posShape.push_back(head_dim / 2);
+    posShape.push_back(pos + 1);
+    freqs_cos.set_shape(posShape);
+    freqs_sin.set_shape(posShape);
+    for (int i = 0; i < (pos + 1) * head_dim / 2; i++) {
+        freqs_cos.get_data()->data()[i] = freqs_cos_table[i];
+        freqs_sin.get_data()->data()[i] = freqs_sin_table[i];
+    }
+
+    Tensor inputTensor;
     vector<int> inputShape;
     vector<float> inputData;
     inputShape.push_back(2);
     inputData.push_back(1.0);
     inputData.push_back(2.0);
-    inputTensor->set_shape(inputShape);
-    inputTensor->set_data(inputData);
+    inputTensor.set_shape(inputShape);
+    inputTensor.set_data(inputData);
 
-    graph->input("in", inputTensor);
+    graph->input("in", &inputTensor);
 
     Tensor* output;
-    graph->extract("10", output);
+    graph->extract("11", output);
 
     delete graph;
 
