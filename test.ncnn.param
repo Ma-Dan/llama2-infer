@@ -39,3 +39,11 @@ Posenc_t layer0_att_k_posenc 3 1 16 freqs_cos freqs_sin 17
 Matmul_t layer0_att_qk_matmul 2 1 17 12 18
 BinaryOp_t layer0_att_qk_div 1 1 18 19 0=Div 1=Param 2=8
 Softmax_t layer0_att_qk_softmax 1 1 19 20 0=0
+MemoryData_t layer0_att_wv_weight 0 1 21 0=2 1=512 2=512 3=16908800
+Matmul_t layer0_att_v_linear 2 1 8 21 22
+Concat_t layer0_att_v_concat 2 1 v_cache_0 22 23 0=0
+Reshape_t layer0_att_v_reshape 1 1 23 24 0=3 1=-1 2=8 3=64
+Matmul_t layer0_att_qkv_matmul 2 1 24 20 25
+Reshape_t layer0_att_qkv_reshape 1 1 25 26 0=2 1=-1 2=512
+MemoryData_t layer0_att_wo_weight 0 1 27 0=2 1=512 2=512 3=17170944
+Matmul_t layer0_att_wo_matmul 2 1 26 27 28

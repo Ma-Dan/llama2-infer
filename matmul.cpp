@@ -32,8 +32,9 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     vector<int> input0Shape = input[0]->get_shape();
     vector<int> input1Shape = input[1]->get_shape();
 
-    if(input0Shape.size() == 2)
+    if(input0Shape.size() == 2 && input1Shape.size() == 2)
     {
+        //Linear
         if(input0Shape[1] != input1Shape[1])
         {
             return;
@@ -58,8 +59,9 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
             }
         }
     }
-    else if(input0Shape.size() == 3)
+    else if(input0Shape.size() == 3 && input1Shape.size() == 3)
     {
+        //QK
         if(input0Shape[1] != input1Shape[1])
         {
             return;
@@ -85,6 +87,33 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     sum += input0Data->data()[(i*input0Shape[1]+j)*input0Shape[2]+k] * input1Data->data()[j*input1Shape[2]+k];
                 }
                 outputData->data()[i*input0Shape[1]+j] = sum;
+            }
+        }
+    }
+    else if(input0Shape.size() == 3 && input1Shape.size() == 2)
+    {
+        //QKV
+        //TODO:引入transpose不特殊处理
+        vector<int> outputShape;
+        outputShape.push_back(1);
+        outputShape.push_back(input0Shape[1]);
+        outputShape.push_back(input0Shape[2]);
+        result->set_shape(outputShape);
+        vector<float>* outputData = result->get_data();
+
+        for(int i=0; i<input0Shape[1]; i++)
+        {
+            //head循环
+            for(int j=0; j<input0Shape[2]; j++)
+            {
+                //head_dim循环
+                float sum = 0.0f;
+                for(int k=0; k<input0Shape[0]; k++)
+                {
+                    //pos循环
+                    sum += input0Data->data()[k*input0Shape[1]*input0Shape[2]+i*input0Shape[2]+j]*input1Data->data()[k*input0Shape[1]+i];
+                }
+                outputData->data()[i*input0Shape[2]+j] = sum;
             }
         }
     }
