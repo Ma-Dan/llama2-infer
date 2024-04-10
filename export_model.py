@@ -6,6 +6,13 @@ import struct
 torch.backends.cuda.matmul.allow_tf32 = True # allow tf32 on matmul
 torch.backends.cudnn.allow_tf32 = True # allow tf32 on cudnn
 
+def input_node(param, node_name, out_name):
+    param.append("Input_t {} 0 1 {}".format(node_name, out_name))
+
+def embed_node(param, node_name, input_name, dim0, dim1, idx, weight_offset):
+    param.append("Embed_t {} 1 1 {} {} 0={} 1={} 2={}".format(node_name, input_name, idx, dim0, dim1, weight_offset))
+    return idx, weight_offset+dim0*dim1
+
 def unary_node(param, node_name, operate, idx):
     idx_output = idx+1
     param.append("UnaryOp_t {} 1 1 {} {} 0={}".format(node_name, idx, idx_output, operate))
@@ -136,12 +143,16 @@ def transformer_layer(param, layer_idx, idx_input, weight_offset):
 
     return idx_ffn_shortcut, weight_offset
 
-def input_node(param, node_name, out_name):
-    param.append("Input_t {} 0 1 {}".format(node_name, out_name))
+def output_norm(param, idx_input, weight_offset):
+    idx_outnorm_square = unary_node(param, "outnorm_square", "Square", idx_input)
+    idx_outnorm_mean = reduction_node(param, "outnorm_mean", "Mean", idx_outnorm_square)
+    idx_outnorm_add = binary1_node(param, "outnorm_add", "Add", "0.000010", idx_outnorm_mean)
+    idx_outnorm_rsq = unary_node(param, "outnorm_rsq", "Rsq", idx_outnorm_add)
+    idx_outnorm_mul1 = binary2_node(param, "outnorm_mul1", "Mul", idx_input, idx_outnorm_rsq)
+    idx_outnorm_weight, weight_offset = memorydata1_node(param, "outnorm_weight", 512, weight_offset, idx_outnorm_mul1)
+    idx_outnorm_mul2 = binary2_node(param, "attnorm_mul2", "Mul", idx_outnorm_mul1, idx_outnorm_weight)
 
-def embed_node(param, node_name, input_name, dim0, dim1, idx, weight_offset):
-    param.append("Embed_t input_embed 1 1 {} {} 0={} 1={} 2={}".format(input_name, idx, dim0, dim1, weight_offset))
-    return idx, weight_offset+dim0*dim1
+    return idx_outnorm_mul2, weight_offset
 
 def model_param(model, param):
     #文件头
@@ -161,9 +172,20 @@ def model_param(model, param):
     idx = 1
     weight_offset = 0
 
+    #输入embedding
     idx, weight_offset = embed_node(param, "input_embed", "in", 512, 32000, idx, weight_offset)
+
+    #多层attention
     for i in range(8):
         idx, weight_offset = transformer_layer(param, 0, idx, weight_offset)
+
+    #输出norm
+    idx_output_norm, weight_offset = output_norm(param, idx, weight_offset)
+
+    #输出embedding
+    idx_output_embed_weight, weight_offset = memorydata2_node(param, "output_embed_weight", 32000, 512, weight_offset, idx_output_norm)
+    matmul_node(param, "output_matmul", idx_output_norm, idx_output_embed_weight)
+
 
 def serialize_fp32(file, tensor):
     """ writes one fp32 tensor to file that is open in wb mode """
@@ -197,9 +219,10 @@ def export_model(checkpoint, param_file_path, bin_file_path):
 
     bin_file = open(bin_file_path, 'wb')
 
-    #TODO: 目前在手动编制结构阶段,后面需要按照结构导出结构和权重数据
+    #输入embedding
     serialize_fp32(bin_file, model.tok_embeddings.weight)
 
+    #多层attention
     for i in range(8):
         serialize_fp32(bin_file, model.layers[i].attention_norm.state_dict()['weight'])
         serialize_fp32(bin_file, model.layers[i].attention.wq.state_dict()['weight'])
@@ -210,6 +233,12 @@ def export_model(checkpoint, param_file_path, bin_file_path):
         serialize_fp32(bin_file, model.layers[i].feed_forward.w1.state_dict()['weight'])
         serialize_fp32(bin_file, model.layers[i].feed_forward.w3.state_dict()['weight'])
         serialize_fp32(bin_file, model.layers[i].feed_forward.w2.state_dict()['weight'])
+
+    #输出rms norm
+    serialize_fp32(bin_file, model.norm.state_dict()['weight'])
+
+    #输出embedding
+    serialize_fp32(bin_file, model.output.state_dict()['weight'])
 
     bin_file.close()
 

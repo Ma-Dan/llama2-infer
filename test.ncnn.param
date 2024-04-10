@@ -372,3 +372,12 @@ BinaryOp_t layer0_ffn_mul 2 1 347 349 350 0=Mul 1=Tensor
 MemoryData_t layer0_ffn_w2_weight 0 1 351 0=2 1=512 2=1376 3=40984576
 Matmul_t layer0_ffn_w2_matmul 2 1 350 351 352
 BinaryOp_t layer0_ffn_shortcut 2 1 337 352 353 0=Add 1=Tensor
+UnaryOp_t outnorm_square 1 1 353 354 0=Square
+Reduction_t outnorm_mean 1 1 354 355 0=Mean 1=1
+BinaryOp_t outnorm_add 1 1 355 356 0=Add 1=Param 2=0.000010
+UnaryOp_t outnorm_rsq 1 1 356 357 0=Rsq
+BinaryOp_t outnorm_mul1 2 1 353 357 358 0=Mul 1=Tensor
+MemoryData_t outnorm_weight 0 1 359 0=1 1=512 2=41689088
+BinaryOp_t attnorm_mul2 2 1 358 359 360 0=Mul 1=Tensor
+MemoryData_t output_embed_weight 0 1 361 0=2 1=32000 2=512 3=41689600
+Matmul_t output_matmul 2 1 360 361 output
