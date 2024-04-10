@@ -21,7 +21,7 @@ int Embed::load_model(const vector<string> &params, FILE* fp)
         shape.push_back(atoi(dim_size[1].c_str()));
     }
 
-    vector<string> weight_offset_param = split(params[9], "=");
+    vector<string> weight_offset_param = split(params[8], "=");
     long weight_offset = atol(weight_offset_param[1].c_str());
 
     _weight->set_shape(shape);
