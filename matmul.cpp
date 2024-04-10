@@ -46,6 +46,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
+        #pragma omp parallel for private(i)
         for(int i=0; i<input0Shape[0]; i++)
         {
             for(int j=0; j<input1Shape[0]; j++)
@@ -77,6 +78,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
+        #pragma omp parallel for private(i)
         for(int i=0; i<input0Shape[0]; i++)
         {
             for(int j=0; j<input0Shape[1]; j++)
@@ -101,6 +103,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
+        #pragma omp parallel for private(i)
         for(int i=0; i<input0Shape[1]; i++)
         {
             //head循环

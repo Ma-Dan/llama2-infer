@@ -313,7 +313,7 @@ int main(int argc, char** argv) {
     auto t1 = clk.now();
     auto elapsed =
         std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0);
-    std::cerr << elapsed.count() / (token_count - 1) << " ms / token"
+    std::cerr << (token_count - 1) * 1000 / elapsed.count() << " tokens/s"
               << std::endl;
 
     delete graph;
