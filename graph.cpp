@@ -97,7 +97,7 @@ void Graph::input(string operand_name, Tensor* input_tensor)
     {
         if(_operand_map[operand_name] != nullptr)
         {
-            SAFE_DELETE(_operand_map[operand_name]);
+            //SAFE_DELETE(_operand_map[operand_name]);
         }
     }
 
@@ -128,6 +128,18 @@ int Graph::extract(string operand_name, Tensor* &output_tensor)
     for(int i=0; i<execList.size(); i++)
     {
         execList[i]->forward();
+    }
+
+    output_tensor = _operand_map[operand_name];
+
+    return 0;
+}
+
+int Graph::get_result(string operand_name, Tensor* &output_tensor)
+{
+    if(_operand_map.find(operand_name) == _operand_map.end())
+    {
+        return -1;
     }
 
     output_tensor = _operand_map[operand_name];

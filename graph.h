@@ -23,6 +23,7 @@ class Graph
 
         void input(string operand_name, Tensor* input_tensor);
         int extract(string operand_name, Tensor* &output_tensor);
+        int get_result(string operand_name, Tensor* &output_tensor);
 
         Tensor* find_operand(string operand_name);
 

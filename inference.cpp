@@ -239,49 +239,82 @@ int main(int argc, char** argv) {
     int prompt_end = tokens.size();
     tokens.resize(token_count);
 
-    // for (int i = 0; i < token_count; i++) std::cout << tokens[i] << " ";
-    // std::cout << std::endl;
-
     // 加载模型
     Graph* graph = new Graph();
     graph->load_model(model_name);
 
-    int pos = 0;
-
-    Tensor freqs_cos;
-    Tensor freqs_sin;
-    vector<int> posShape;
-    posShape.push_back(pos + 1);
-    posShape.push_back(head_dim / 2);
-    freqs_cos.set_shape(posShape);
-    freqs_sin.set_shape(posShape);
-    for (int i = 0; i < (pos + 1) * head_dim / 2; i++) {
-        freqs_cos.get_data()->data()[i] = freqs_cos_table[i];
-        freqs_sin.get_data()->data()[i] = freqs_sin_table[i];
-    }
-
     Tensor inputTensor;
     vector<int> inputShape;
-    vector<float> inputData;
     inputShape.push_back(1);
-    inputData.push_back(1.0);
     inputTensor.set_shape(inputShape);
-    inputTensor.set_data(inputData);
+    vector<float> inputData;
+    inputData.push_back(0);
 
-    graph->input("in", &inputTensor);
-    graph->input("freqs_cos", &freqs_cos);
-    graph->input("freqs_sin", &freqs_sin);
-    for(int i = 0; i < n_layers; i++)
-    {
-        auto layer_name = std::to_string(i);
-        auto kc_name = "k_cache_" + layer_name;
-        auto vc_name = "v_cache_" + layer_name;
-        graph->input(kc_name.c_str(), kcache[i]);
-        graph->input(vc_name.c_str(), vcache[i]);
+    std::chrono::steady_clock clk;
+    auto t0 = clk.now();
+
+    // feed forward
+    for (int pos = 0; pos < token_count; pos++) {
+        std::cout << tokenizer.vocab[tokens[pos]] << std::flush;
+
+        inputData[0] = (float)tokens[pos];
+        inputTensor.set_data(inputData);
+
+        Tensor freqs_cos;
+        Tensor freqs_sin;
+        vector<int> posShape;
+        posShape.push_back(pos + 1);
+        posShape.push_back(head_dim / 2);
+        freqs_cos.set_shape(posShape);
+        freqs_sin.set_shape(posShape);
+        for (int i = 0; i < (pos + 1) * head_dim / 2; i++) {
+            freqs_cos.get_data()->data()[i] = freqs_cos_table[i];
+            freqs_sin.get_data()->data()[i] = freqs_sin_table[i];
+        }
+
+        graph->input("in", &inputTensor);
+        graph->input("freqs_cos", &freqs_cos);
+        graph->input("freqs_sin", &freqs_sin);
+
+        for(int i = 0; i < n_layers; i++)
+        {
+            auto layer_name = std::to_string(i);
+            auto kc_name = "k_cache_" + layer_name;
+            auto vc_name = "v_cache_" + layer_name;
+            graph->input(kc_name.c_str(), kcache[i]);
+            graph->input(vc_name.c_str(), vcache[i]);
+        }
+
+        Tensor* output;
+        graph->extract("output", output);
+
+        //暂时直接写数字读取kvcache输出
+        int kcache_start = 14;
+        int vcache_start = 22;
+        for(int i = 0; i < n_layers; i++)
+        {
+            Tensor* kcache_out;
+            graph->get_result(std::to_string(kcache_start+i*44), kcache_out);
+            kcache[i]->set_shape(kcache_out->get_shape());
+            kcache[i]->set_data(*kcache_out->get_data());
+
+            Tensor* vcache_out;
+            graph->get_result(std::to_string(vcache_start+i*44), vcache_out);
+            vcache[i]->set_shape(vcache_out->get_shape());
+            vcache[i]->set_data(*vcache_out->get_data());
+        }
+
+        if (pos < prompt_end - 1) continue;
+        tokens[pos + 1] = sample(*output->get_data(), temp, topp, topk);
+        if (pos == 0) t0 = clk.now();
     }
+    std::cout << std::endl;
 
-    Tensor* output;
-    graph->extract("output", output);
+    auto t1 = clk.now();
+    auto elapsed =
+        std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0);
+    std::cerr << elapsed.count() / (token_count - 1) << " ms / token"
+              << std::endl;
 
     delete graph;
 

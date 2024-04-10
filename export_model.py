@@ -177,7 +177,7 @@ def model_param(model, param):
 
     #多层attention
     for i in range(8):
-        idx, weight_offset = transformer_layer(param, 0, idx, weight_offset)
+        idx, weight_offset = transformer_layer(param, i, idx, weight_offset)
 
     #输出norm
     idx_output_norm, weight_offset = output_norm(param, idx, weight_offset)

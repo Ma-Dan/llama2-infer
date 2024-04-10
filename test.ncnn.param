@@ -64,314 +64,314 @@ BinaryOp_t layer0_ffn_mul 2 1 39 41 42 0=Mul 1=Tensor
 MemoryData_t layer0_ffn_w2_weight 0 1 43 0=2 1=512 2=1376 3=18842624
 Matmul_t layer0_ffn_w2_matmul 2 1 42 43 44
 BinaryOp_t layer0_ffn_shortcut 2 1 29 44 45 0=Add 1=Tensor
-UnaryOp_t layer0_attnorm_square 1 1 45 46 0=Square
-Reduction_t layer0_attnorm_mean 1 1 46 47 0=Mean 1=1
-BinaryOp_t layer0_attnorm_add 1 1 47 48 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_attnorm_rsq 1 1 48 49 0=Rsq
-BinaryOp_t layer0_attnorm_mul1 2 1 45 49 50 0=Mul 1=Tensor
-MemoryData_t layer0_attnorm_weight 0 1 51 0=1 1=512 2=19547136
-BinaryOp_t layer0_attnorm_mul2 2 1 50 51 52 0=Mul 1=Tensor
-MemoryData_t layer0_att_wq_weight 0 1 53 0=2 1=512 2=512 3=19547648
-Matmul_t layer0_att_q_linear 2 1 52 53 54
-Reshape_t layer0_att_q_reshape 1 1 54 55 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_q_posenc 3 1 55 freqs_cos freqs_sin 56
-MemoryData_t layer0_att_wk_weight 0 1 57 0=2 1=512 2=512 3=19809792
-Matmul_t layer0_att_k_linear 2 1 52 57 58
-Concat_t layer0_att_k_concat 2 1 k_cache_0 58 59 0=0
-Reshape_t layer0_att_k_reshape 1 1 59 60 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_k_posenc 3 1 60 freqs_cos freqs_sin 61
-Matmul_t layer0_att_qk_matmul 2 1 61 56 62
-BinaryOp_t layer0_att_qk_div 1 1 62 63 0=Div 1=Param 2=8
-Softmax_t layer0_att_qk_softmax 1 1 63 64 0=0
-MemoryData_t layer0_att_wv_weight 0 1 65 0=2 1=512 2=512 3=20071936
-Matmul_t layer0_att_v_linear 2 1 52 65 66
-Concat_t layer0_att_v_concat 2 1 v_cache_0 66 67 0=0
-Reshape_t layer0_att_v_reshape 1 1 67 68 0=3 1=-1 2=8 3=64
-Matmul_t layer0_att_qkv_matmul 2 1 68 64 69
-Reshape_t layer0_att_qkv_reshape 1 1 69 70 0=2 1=-1 2=512
-MemoryData_t layer0_att_wo_weight 0 1 71 0=2 1=512 2=512 3=20334080
-Matmul_t layer0_att_wo_matmul 2 1 70 71 72
-BinaryOp_t layer0_att_shortcut 2 1 45 72 73 0=Add 1=Tensor
-UnaryOp_t layer0_ffnnorm_square 1 1 73 74 0=Square
-Reduction_t layer0_ffnnorm_mean 1 1 74 75 0=Mean 1=1
-BinaryOp_t layer0_ffnnorm_add 1 1 75 76 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_ffnnorm_rsq 1 1 76 77 0=Rsq
-BinaryOp_t layer0_ffnnorm_mul1 2 1 73 77 78 0=Mul 1=Tensor
-MemoryData_t layer0_ffnnorm_weight 0 1 79 0=1 1=512 2=20596224
-BinaryOp_t layer0_ffnnorm_mul2 2 1 78 79 80 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w1_weight 0 1 81 0=2 1=1376 2=512 3=20596736
-Matmul_t layer0_ffn_w1_matmul 2 1 80 81 82
-Swish_t layer0_ffn_w1_swish 1 1 82 83
-MemoryData_t layer0_ffn_w3_weight 0 1 84 0=2 1=1376 2=512 3=21301248
-Matmul_t layer0_ffn_w3_matmul 2 1 80 84 85
-BinaryOp_t layer0_ffn_mul 2 1 83 85 86 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w2_weight 0 1 87 0=2 1=512 2=1376 3=22005760
-Matmul_t layer0_ffn_w2_matmul 2 1 86 87 88
-BinaryOp_t layer0_ffn_shortcut 2 1 73 88 89 0=Add 1=Tensor
-UnaryOp_t layer0_attnorm_square 1 1 89 90 0=Square
-Reduction_t layer0_attnorm_mean 1 1 90 91 0=Mean 1=1
-BinaryOp_t layer0_attnorm_add 1 1 91 92 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_attnorm_rsq 1 1 92 93 0=Rsq
-BinaryOp_t layer0_attnorm_mul1 2 1 89 93 94 0=Mul 1=Tensor
-MemoryData_t layer0_attnorm_weight 0 1 95 0=1 1=512 2=22710272
-BinaryOp_t layer0_attnorm_mul2 2 1 94 95 96 0=Mul 1=Tensor
-MemoryData_t layer0_att_wq_weight 0 1 97 0=2 1=512 2=512 3=22710784
-Matmul_t layer0_att_q_linear 2 1 96 97 98
-Reshape_t layer0_att_q_reshape 1 1 98 99 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_q_posenc 3 1 99 freqs_cos freqs_sin 100
-MemoryData_t layer0_att_wk_weight 0 1 101 0=2 1=512 2=512 3=22972928
-Matmul_t layer0_att_k_linear 2 1 96 101 102
-Concat_t layer0_att_k_concat 2 1 k_cache_0 102 103 0=0
-Reshape_t layer0_att_k_reshape 1 1 103 104 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_k_posenc 3 1 104 freqs_cos freqs_sin 105
-Matmul_t layer0_att_qk_matmul 2 1 105 100 106
-BinaryOp_t layer0_att_qk_div 1 1 106 107 0=Div 1=Param 2=8
-Softmax_t layer0_att_qk_softmax 1 1 107 108 0=0
-MemoryData_t layer0_att_wv_weight 0 1 109 0=2 1=512 2=512 3=23235072
-Matmul_t layer0_att_v_linear 2 1 96 109 110
-Concat_t layer0_att_v_concat 2 1 v_cache_0 110 111 0=0
-Reshape_t layer0_att_v_reshape 1 1 111 112 0=3 1=-1 2=8 3=64
-Matmul_t layer0_att_qkv_matmul 2 1 112 108 113
-Reshape_t layer0_att_qkv_reshape 1 1 113 114 0=2 1=-1 2=512
-MemoryData_t layer0_att_wo_weight 0 1 115 0=2 1=512 2=512 3=23497216
-Matmul_t layer0_att_wo_matmul 2 1 114 115 116
-BinaryOp_t layer0_att_shortcut 2 1 89 116 117 0=Add 1=Tensor
-UnaryOp_t layer0_ffnnorm_square 1 1 117 118 0=Square
-Reduction_t layer0_ffnnorm_mean 1 1 118 119 0=Mean 1=1
-BinaryOp_t layer0_ffnnorm_add 1 1 119 120 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_ffnnorm_rsq 1 1 120 121 0=Rsq
-BinaryOp_t layer0_ffnnorm_mul1 2 1 117 121 122 0=Mul 1=Tensor
-MemoryData_t layer0_ffnnorm_weight 0 1 123 0=1 1=512 2=23759360
-BinaryOp_t layer0_ffnnorm_mul2 2 1 122 123 124 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w1_weight 0 1 125 0=2 1=1376 2=512 3=23759872
-Matmul_t layer0_ffn_w1_matmul 2 1 124 125 126
-Swish_t layer0_ffn_w1_swish 1 1 126 127
-MemoryData_t layer0_ffn_w3_weight 0 1 128 0=2 1=1376 2=512 3=24464384
-Matmul_t layer0_ffn_w3_matmul 2 1 124 128 129
-BinaryOp_t layer0_ffn_mul 2 1 127 129 130 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w2_weight 0 1 131 0=2 1=512 2=1376 3=25168896
-Matmul_t layer0_ffn_w2_matmul 2 1 130 131 132
-BinaryOp_t layer0_ffn_shortcut 2 1 117 132 133 0=Add 1=Tensor
-UnaryOp_t layer0_attnorm_square 1 1 133 134 0=Square
-Reduction_t layer0_attnorm_mean 1 1 134 135 0=Mean 1=1
-BinaryOp_t layer0_attnorm_add 1 1 135 136 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_attnorm_rsq 1 1 136 137 0=Rsq
-BinaryOp_t layer0_attnorm_mul1 2 1 133 137 138 0=Mul 1=Tensor
-MemoryData_t layer0_attnorm_weight 0 1 139 0=1 1=512 2=25873408
-BinaryOp_t layer0_attnorm_mul2 2 1 138 139 140 0=Mul 1=Tensor
-MemoryData_t layer0_att_wq_weight 0 1 141 0=2 1=512 2=512 3=25873920
-Matmul_t layer0_att_q_linear 2 1 140 141 142
-Reshape_t layer0_att_q_reshape 1 1 142 143 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_q_posenc 3 1 143 freqs_cos freqs_sin 144
-MemoryData_t layer0_att_wk_weight 0 1 145 0=2 1=512 2=512 3=26136064
-Matmul_t layer0_att_k_linear 2 1 140 145 146
-Concat_t layer0_att_k_concat 2 1 k_cache_0 146 147 0=0
-Reshape_t layer0_att_k_reshape 1 1 147 148 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_k_posenc 3 1 148 freqs_cos freqs_sin 149
-Matmul_t layer0_att_qk_matmul 2 1 149 144 150
-BinaryOp_t layer0_att_qk_div 1 1 150 151 0=Div 1=Param 2=8
-Softmax_t layer0_att_qk_softmax 1 1 151 152 0=0
-MemoryData_t layer0_att_wv_weight 0 1 153 0=2 1=512 2=512 3=26398208
-Matmul_t layer0_att_v_linear 2 1 140 153 154
-Concat_t layer0_att_v_concat 2 1 v_cache_0 154 155 0=0
-Reshape_t layer0_att_v_reshape 1 1 155 156 0=3 1=-1 2=8 3=64
-Matmul_t layer0_att_qkv_matmul 2 1 156 152 157
-Reshape_t layer0_att_qkv_reshape 1 1 157 158 0=2 1=-1 2=512
-MemoryData_t layer0_att_wo_weight 0 1 159 0=2 1=512 2=512 3=26660352
-Matmul_t layer0_att_wo_matmul 2 1 158 159 160
-BinaryOp_t layer0_att_shortcut 2 1 133 160 161 0=Add 1=Tensor
-UnaryOp_t layer0_ffnnorm_square 1 1 161 162 0=Square
-Reduction_t layer0_ffnnorm_mean 1 1 162 163 0=Mean 1=1
-BinaryOp_t layer0_ffnnorm_add 1 1 163 164 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_ffnnorm_rsq 1 1 164 165 0=Rsq
-BinaryOp_t layer0_ffnnorm_mul1 2 1 161 165 166 0=Mul 1=Tensor
-MemoryData_t layer0_ffnnorm_weight 0 1 167 0=1 1=512 2=26922496
-BinaryOp_t layer0_ffnnorm_mul2 2 1 166 167 168 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w1_weight 0 1 169 0=2 1=1376 2=512 3=26923008
-Matmul_t layer0_ffn_w1_matmul 2 1 168 169 170
-Swish_t layer0_ffn_w1_swish 1 1 170 171
-MemoryData_t layer0_ffn_w3_weight 0 1 172 0=2 1=1376 2=512 3=27627520
-Matmul_t layer0_ffn_w3_matmul 2 1 168 172 173
-BinaryOp_t layer0_ffn_mul 2 1 171 173 174 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w2_weight 0 1 175 0=2 1=512 2=1376 3=28332032
-Matmul_t layer0_ffn_w2_matmul 2 1 174 175 176
-BinaryOp_t layer0_ffn_shortcut 2 1 161 176 177 0=Add 1=Tensor
-UnaryOp_t layer0_attnorm_square 1 1 177 178 0=Square
-Reduction_t layer0_attnorm_mean 1 1 178 179 0=Mean 1=1
-BinaryOp_t layer0_attnorm_add 1 1 179 180 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_attnorm_rsq 1 1 180 181 0=Rsq
-BinaryOp_t layer0_attnorm_mul1 2 1 177 181 182 0=Mul 1=Tensor
-MemoryData_t layer0_attnorm_weight 0 1 183 0=1 1=512 2=29036544
-BinaryOp_t layer0_attnorm_mul2 2 1 182 183 184 0=Mul 1=Tensor
-MemoryData_t layer0_att_wq_weight 0 1 185 0=2 1=512 2=512 3=29037056
-Matmul_t layer0_att_q_linear 2 1 184 185 186
-Reshape_t layer0_att_q_reshape 1 1 186 187 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_q_posenc 3 1 187 freqs_cos freqs_sin 188
-MemoryData_t layer0_att_wk_weight 0 1 189 0=2 1=512 2=512 3=29299200
-Matmul_t layer0_att_k_linear 2 1 184 189 190
-Concat_t layer0_att_k_concat 2 1 k_cache_0 190 191 0=0
-Reshape_t layer0_att_k_reshape 1 1 191 192 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_k_posenc 3 1 192 freqs_cos freqs_sin 193
-Matmul_t layer0_att_qk_matmul 2 1 193 188 194
-BinaryOp_t layer0_att_qk_div 1 1 194 195 0=Div 1=Param 2=8
-Softmax_t layer0_att_qk_softmax 1 1 195 196 0=0
-MemoryData_t layer0_att_wv_weight 0 1 197 0=2 1=512 2=512 3=29561344
-Matmul_t layer0_att_v_linear 2 1 184 197 198
-Concat_t layer0_att_v_concat 2 1 v_cache_0 198 199 0=0
-Reshape_t layer0_att_v_reshape 1 1 199 200 0=3 1=-1 2=8 3=64
-Matmul_t layer0_att_qkv_matmul 2 1 200 196 201
-Reshape_t layer0_att_qkv_reshape 1 1 201 202 0=2 1=-1 2=512
-MemoryData_t layer0_att_wo_weight 0 1 203 0=2 1=512 2=512 3=29823488
-Matmul_t layer0_att_wo_matmul 2 1 202 203 204
-BinaryOp_t layer0_att_shortcut 2 1 177 204 205 0=Add 1=Tensor
-UnaryOp_t layer0_ffnnorm_square 1 1 205 206 0=Square
-Reduction_t layer0_ffnnorm_mean 1 1 206 207 0=Mean 1=1
-BinaryOp_t layer0_ffnnorm_add 1 1 207 208 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_ffnnorm_rsq 1 1 208 209 0=Rsq
-BinaryOp_t layer0_ffnnorm_mul1 2 1 205 209 210 0=Mul 1=Tensor
-MemoryData_t layer0_ffnnorm_weight 0 1 211 0=1 1=512 2=30085632
-BinaryOp_t layer0_ffnnorm_mul2 2 1 210 211 212 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w1_weight 0 1 213 0=2 1=1376 2=512 3=30086144
-Matmul_t layer0_ffn_w1_matmul 2 1 212 213 214
-Swish_t layer0_ffn_w1_swish 1 1 214 215
-MemoryData_t layer0_ffn_w3_weight 0 1 216 0=2 1=1376 2=512 3=30790656
-Matmul_t layer0_ffn_w3_matmul 2 1 212 216 217
-BinaryOp_t layer0_ffn_mul 2 1 215 217 218 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w2_weight 0 1 219 0=2 1=512 2=1376 3=31495168
-Matmul_t layer0_ffn_w2_matmul 2 1 218 219 220
-BinaryOp_t layer0_ffn_shortcut 2 1 205 220 221 0=Add 1=Tensor
-UnaryOp_t layer0_attnorm_square 1 1 221 222 0=Square
-Reduction_t layer0_attnorm_mean 1 1 222 223 0=Mean 1=1
-BinaryOp_t layer0_attnorm_add 1 1 223 224 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_attnorm_rsq 1 1 224 225 0=Rsq
-BinaryOp_t layer0_attnorm_mul1 2 1 221 225 226 0=Mul 1=Tensor
-MemoryData_t layer0_attnorm_weight 0 1 227 0=1 1=512 2=32199680
-BinaryOp_t layer0_attnorm_mul2 2 1 226 227 228 0=Mul 1=Tensor
-MemoryData_t layer0_att_wq_weight 0 1 229 0=2 1=512 2=512 3=32200192
-Matmul_t layer0_att_q_linear 2 1 228 229 230
-Reshape_t layer0_att_q_reshape 1 1 230 231 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_q_posenc 3 1 231 freqs_cos freqs_sin 232
-MemoryData_t layer0_att_wk_weight 0 1 233 0=2 1=512 2=512 3=32462336
-Matmul_t layer0_att_k_linear 2 1 228 233 234
-Concat_t layer0_att_k_concat 2 1 k_cache_0 234 235 0=0
-Reshape_t layer0_att_k_reshape 1 1 235 236 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_k_posenc 3 1 236 freqs_cos freqs_sin 237
-Matmul_t layer0_att_qk_matmul 2 1 237 232 238
-BinaryOp_t layer0_att_qk_div 1 1 238 239 0=Div 1=Param 2=8
-Softmax_t layer0_att_qk_softmax 1 1 239 240 0=0
-MemoryData_t layer0_att_wv_weight 0 1 241 0=2 1=512 2=512 3=32724480
-Matmul_t layer0_att_v_linear 2 1 228 241 242
-Concat_t layer0_att_v_concat 2 1 v_cache_0 242 243 0=0
-Reshape_t layer0_att_v_reshape 1 1 243 244 0=3 1=-1 2=8 3=64
-Matmul_t layer0_att_qkv_matmul 2 1 244 240 245
-Reshape_t layer0_att_qkv_reshape 1 1 245 246 0=2 1=-1 2=512
-MemoryData_t layer0_att_wo_weight 0 1 247 0=2 1=512 2=512 3=32986624
-Matmul_t layer0_att_wo_matmul 2 1 246 247 248
-BinaryOp_t layer0_att_shortcut 2 1 221 248 249 0=Add 1=Tensor
-UnaryOp_t layer0_ffnnorm_square 1 1 249 250 0=Square
-Reduction_t layer0_ffnnorm_mean 1 1 250 251 0=Mean 1=1
-BinaryOp_t layer0_ffnnorm_add 1 1 251 252 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_ffnnorm_rsq 1 1 252 253 0=Rsq
-BinaryOp_t layer0_ffnnorm_mul1 2 1 249 253 254 0=Mul 1=Tensor
-MemoryData_t layer0_ffnnorm_weight 0 1 255 0=1 1=512 2=33248768
-BinaryOp_t layer0_ffnnorm_mul2 2 1 254 255 256 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w1_weight 0 1 257 0=2 1=1376 2=512 3=33249280
-Matmul_t layer0_ffn_w1_matmul 2 1 256 257 258
-Swish_t layer0_ffn_w1_swish 1 1 258 259
-MemoryData_t layer0_ffn_w3_weight 0 1 260 0=2 1=1376 2=512 3=33953792
-Matmul_t layer0_ffn_w3_matmul 2 1 256 260 261
-BinaryOp_t layer0_ffn_mul 2 1 259 261 262 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w2_weight 0 1 263 0=2 1=512 2=1376 3=34658304
-Matmul_t layer0_ffn_w2_matmul 2 1 262 263 264
-BinaryOp_t layer0_ffn_shortcut 2 1 249 264 265 0=Add 1=Tensor
-UnaryOp_t layer0_attnorm_square 1 1 265 266 0=Square
-Reduction_t layer0_attnorm_mean 1 1 266 267 0=Mean 1=1
-BinaryOp_t layer0_attnorm_add 1 1 267 268 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_attnorm_rsq 1 1 268 269 0=Rsq
-BinaryOp_t layer0_attnorm_mul1 2 1 265 269 270 0=Mul 1=Tensor
-MemoryData_t layer0_attnorm_weight 0 1 271 0=1 1=512 2=35362816
-BinaryOp_t layer0_attnorm_mul2 2 1 270 271 272 0=Mul 1=Tensor
-MemoryData_t layer0_att_wq_weight 0 1 273 0=2 1=512 2=512 3=35363328
-Matmul_t layer0_att_q_linear 2 1 272 273 274
-Reshape_t layer0_att_q_reshape 1 1 274 275 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_q_posenc 3 1 275 freqs_cos freqs_sin 276
-MemoryData_t layer0_att_wk_weight 0 1 277 0=2 1=512 2=512 3=35625472
-Matmul_t layer0_att_k_linear 2 1 272 277 278
-Concat_t layer0_att_k_concat 2 1 k_cache_0 278 279 0=0
-Reshape_t layer0_att_k_reshape 1 1 279 280 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_k_posenc 3 1 280 freqs_cos freqs_sin 281
-Matmul_t layer0_att_qk_matmul 2 1 281 276 282
-BinaryOp_t layer0_att_qk_div 1 1 282 283 0=Div 1=Param 2=8
-Softmax_t layer0_att_qk_softmax 1 1 283 284 0=0
-MemoryData_t layer0_att_wv_weight 0 1 285 0=2 1=512 2=512 3=35887616
-Matmul_t layer0_att_v_linear 2 1 272 285 286
-Concat_t layer0_att_v_concat 2 1 v_cache_0 286 287 0=0
-Reshape_t layer0_att_v_reshape 1 1 287 288 0=3 1=-1 2=8 3=64
-Matmul_t layer0_att_qkv_matmul 2 1 288 284 289
-Reshape_t layer0_att_qkv_reshape 1 1 289 290 0=2 1=-1 2=512
-MemoryData_t layer0_att_wo_weight 0 1 291 0=2 1=512 2=512 3=36149760
-Matmul_t layer0_att_wo_matmul 2 1 290 291 292
-BinaryOp_t layer0_att_shortcut 2 1 265 292 293 0=Add 1=Tensor
-UnaryOp_t layer0_ffnnorm_square 1 1 293 294 0=Square
-Reduction_t layer0_ffnnorm_mean 1 1 294 295 0=Mean 1=1
-BinaryOp_t layer0_ffnnorm_add 1 1 295 296 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_ffnnorm_rsq 1 1 296 297 0=Rsq
-BinaryOp_t layer0_ffnnorm_mul1 2 1 293 297 298 0=Mul 1=Tensor
-MemoryData_t layer0_ffnnorm_weight 0 1 299 0=1 1=512 2=36411904
-BinaryOp_t layer0_ffnnorm_mul2 2 1 298 299 300 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w1_weight 0 1 301 0=2 1=1376 2=512 3=36412416
-Matmul_t layer0_ffn_w1_matmul 2 1 300 301 302
-Swish_t layer0_ffn_w1_swish 1 1 302 303
-MemoryData_t layer0_ffn_w3_weight 0 1 304 0=2 1=1376 2=512 3=37116928
-Matmul_t layer0_ffn_w3_matmul 2 1 300 304 305
-BinaryOp_t layer0_ffn_mul 2 1 303 305 306 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w2_weight 0 1 307 0=2 1=512 2=1376 3=37821440
-Matmul_t layer0_ffn_w2_matmul 2 1 306 307 308
-BinaryOp_t layer0_ffn_shortcut 2 1 293 308 309 0=Add 1=Tensor
-UnaryOp_t layer0_attnorm_square 1 1 309 310 0=Square
-Reduction_t layer0_attnorm_mean 1 1 310 311 0=Mean 1=1
-BinaryOp_t layer0_attnorm_add 1 1 311 312 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_attnorm_rsq 1 1 312 313 0=Rsq
-BinaryOp_t layer0_attnorm_mul1 2 1 309 313 314 0=Mul 1=Tensor
-MemoryData_t layer0_attnorm_weight 0 1 315 0=1 1=512 2=38525952
-BinaryOp_t layer0_attnorm_mul2 2 1 314 315 316 0=Mul 1=Tensor
-MemoryData_t layer0_att_wq_weight 0 1 317 0=2 1=512 2=512 3=38526464
-Matmul_t layer0_att_q_linear 2 1 316 317 318
-Reshape_t layer0_att_q_reshape 1 1 318 319 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_q_posenc 3 1 319 freqs_cos freqs_sin 320
-MemoryData_t layer0_att_wk_weight 0 1 321 0=2 1=512 2=512 3=38788608
-Matmul_t layer0_att_k_linear 2 1 316 321 322
-Concat_t layer0_att_k_concat 2 1 k_cache_0 322 323 0=0
-Reshape_t layer0_att_k_reshape 1 1 323 324 0=3 1=-1 2=8 3=64
-Posenc_t layer0_att_k_posenc 3 1 324 freqs_cos freqs_sin 325
-Matmul_t layer0_att_qk_matmul 2 1 325 320 326
-BinaryOp_t layer0_att_qk_div 1 1 326 327 0=Div 1=Param 2=8
-Softmax_t layer0_att_qk_softmax 1 1 327 328 0=0
-MemoryData_t layer0_att_wv_weight 0 1 329 0=2 1=512 2=512 3=39050752
-Matmul_t layer0_att_v_linear 2 1 316 329 330
-Concat_t layer0_att_v_concat 2 1 v_cache_0 330 331 0=0
-Reshape_t layer0_att_v_reshape 1 1 331 332 0=3 1=-1 2=8 3=64
-Matmul_t layer0_att_qkv_matmul 2 1 332 328 333
-Reshape_t layer0_att_qkv_reshape 1 1 333 334 0=2 1=-1 2=512
-MemoryData_t layer0_att_wo_weight 0 1 335 0=2 1=512 2=512 3=39312896
-Matmul_t layer0_att_wo_matmul 2 1 334 335 336
-BinaryOp_t layer0_att_shortcut 2 1 309 336 337 0=Add 1=Tensor
-UnaryOp_t layer0_ffnnorm_square 1 1 337 338 0=Square
-Reduction_t layer0_ffnnorm_mean 1 1 338 339 0=Mean 1=1
-BinaryOp_t layer0_ffnnorm_add 1 1 339 340 0=Add 1=Param 2=0.000010
-UnaryOp_t layer0_ffnnorm_rsq 1 1 340 341 0=Rsq
-BinaryOp_t layer0_ffnnorm_mul1 2 1 337 341 342 0=Mul 1=Tensor
-MemoryData_t layer0_ffnnorm_weight 0 1 343 0=1 1=512 2=39575040
-BinaryOp_t layer0_ffnnorm_mul2 2 1 342 343 344 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w1_weight 0 1 345 0=2 1=1376 2=512 3=39575552
-Matmul_t layer0_ffn_w1_matmul 2 1 344 345 346
-Swish_t layer0_ffn_w1_swish 1 1 346 347
-MemoryData_t layer0_ffn_w3_weight 0 1 348 0=2 1=1376 2=512 3=40280064
-Matmul_t layer0_ffn_w3_matmul 2 1 344 348 349
-BinaryOp_t layer0_ffn_mul 2 1 347 349 350 0=Mul 1=Tensor
-MemoryData_t layer0_ffn_w2_weight 0 1 351 0=2 1=512 2=1376 3=40984576
-Matmul_t layer0_ffn_w2_matmul 2 1 350 351 352
-BinaryOp_t layer0_ffn_shortcut 2 1 337 352 353 0=Add 1=Tensor
+UnaryOp_t layer1_attnorm_square 1 1 45 46 0=Square
+Reduction_t layer1_attnorm_mean 1 1 46 47 0=Mean 1=1
+BinaryOp_t layer1_attnorm_add 1 1 47 48 0=Add 1=Param 2=0.000010
+UnaryOp_t layer1_attnorm_rsq 1 1 48 49 0=Rsq
+BinaryOp_t layer1_attnorm_mul1 2 1 45 49 50 0=Mul 1=Tensor
+MemoryData_t layer1_attnorm_weight 0 1 51 0=1 1=512 2=19547136
+BinaryOp_t layer1_attnorm_mul2 2 1 50 51 52 0=Mul 1=Tensor
+MemoryData_t layer1_att_wq_weight 0 1 53 0=2 1=512 2=512 3=19547648
+Matmul_t layer1_att_q_linear 2 1 52 53 54
+Reshape_t layer1_att_q_reshape 1 1 54 55 0=3 1=-1 2=8 3=64
+Posenc_t layer1_att_q_posenc 3 1 55 freqs_cos freqs_sin 56
+MemoryData_t layer1_att_wk_weight 0 1 57 0=2 1=512 2=512 3=19809792
+Matmul_t layer1_att_k_linear 2 1 52 57 58
+Concat_t layer1_att_k_concat 2 1 k_cache_1 58 59 0=0
+Reshape_t layer1_att_k_reshape 1 1 59 60 0=3 1=-1 2=8 3=64
+Posenc_t layer1_att_k_posenc 3 1 60 freqs_cos freqs_sin 61
+Matmul_t layer1_att_qk_matmul 2 1 61 56 62
+BinaryOp_t layer1_att_qk_div 1 1 62 63 0=Div 1=Param 2=8
+Softmax_t layer1_att_qk_softmax 1 1 63 64 0=0
+MemoryData_t layer1_att_wv_weight 0 1 65 0=2 1=512 2=512 3=20071936
+Matmul_t layer1_att_v_linear 2 1 52 65 66
+Concat_t layer1_att_v_concat 2 1 v_cache_1 66 67 0=0
+Reshape_t layer1_att_v_reshape 1 1 67 68 0=3 1=-1 2=8 3=64
+Matmul_t layer1_att_qkv_matmul 2 1 68 64 69
+Reshape_t layer1_att_qkv_reshape 1 1 69 70 0=2 1=-1 2=512
+MemoryData_t layer1_att_wo_weight 0 1 71 0=2 1=512 2=512 3=20334080
+Matmul_t layer1_att_wo_matmul 2 1 70 71 72
+BinaryOp_t layer1_att_shortcut 2 1 45 72 73 0=Add 1=Tensor
+UnaryOp_t layer1_ffnnorm_square 1 1 73 74 0=Square
+Reduction_t layer1_ffnnorm_mean 1 1 74 75 0=Mean 1=1
+BinaryOp_t layer1_ffnnorm_add 1 1 75 76 0=Add 1=Param 2=0.000010
+UnaryOp_t layer1_ffnnorm_rsq 1 1 76 77 0=Rsq
+BinaryOp_t layer1_ffnnorm_mul1 2 1 73 77 78 0=Mul 1=Tensor
+MemoryData_t layer1_ffnnorm_weight 0 1 79 0=1 1=512 2=20596224
+BinaryOp_t layer1_ffnnorm_mul2 2 1 78 79 80 0=Mul 1=Tensor
+MemoryData_t layer1_ffn_w1_weight 0 1 81 0=2 1=1376 2=512 3=20596736
+Matmul_t layer1_ffn_w1_matmul 2 1 80 81 82
+Swish_t layer1_ffn_w1_swish 1 1 82 83
+MemoryData_t layer1_ffn_w3_weight 0 1 84 0=2 1=1376 2=512 3=21301248
+Matmul_t layer1_ffn_w3_matmul 2 1 80 84 85
+BinaryOp_t layer1_ffn_mul 2 1 83 85 86 0=Mul 1=Tensor
+MemoryData_t layer1_ffn_w2_weight 0 1 87 0=2 1=512 2=1376 3=22005760
+Matmul_t layer1_ffn_w2_matmul 2 1 86 87 88
+BinaryOp_t layer1_ffn_shortcut 2 1 73 88 89 0=Add 1=Tensor
+UnaryOp_t layer2_attnorm_square 1 1 89 90 0=Square
+Reduction_t layer2_attnorm_mean 1 1 90 91 0=Mean 1=1
+BinaryOp_t layer2_attnorm_add 1 1 91 92 0=Add 1=Param 2=0.000010
+UnaryOp_t layer2_attnorm_rsq 1 1 92 93 0=Rsq
+BinaryOp_t layer2_attnorm_mul1 2 1 89 93 94 0=Mul 1=Tensor
+MemoryData_t layer2_attnorm_weight 0 1 95 0=1 1=512 2=22710272
+BinaryOp_t layer2_attnorm_mul2 2 1 94 95 96 0=Mul 1=Tensor
+MemoryData_t layer2_att_wq_weight 0 1 97 0=2 1=512 2=512 3=22710784
+Matmul_t layer2_att_q_linear 2 1 96 97 98
+Reshape_t layer2_att_q_reshape 1 1 98 99 0=3 1=-1 2=8 3=64
+Posenc_t layer2_att_q_posenc 3 1 99 freqs_cos freqs_sin 100
+MemoryData_t layer2_att_wk_weight 0 1 101 0=2 1=512 2=512 3=22972928
+Matmul_t layer2_att_k_linear 2 1 96 101 102
+Concat_t layer2_att_k_concat 2 1 k_cache_2 102 103 0=0
+Reshape_t layer2_att_k_reshape 1 1 103 104 0=3 1=-1 2=8 3=64
+Posenc_t layer2_att_k_posenc 3 1 104 freqs_cos freqs_sin 105
+Matmul_t layer2_att_qk_matmul 2 1 105 100 106
+BinaryOp_t layer2_att_qk_div 1 1 106 107 0=Div 1=Param 2=8
+Softmax_t layer2_att_qk_softmax 1 1 107 108 0=0
+MemoryData_t layer2_att_wv_weight 0 1 109 0=2 1=512 2=512 3=23235072
+Matmul_t layer2_att_v_linear 2 1 96 109 110
+Concat_t layer2_att_v_concat 2 1 v_cache_2 110 111 0=0
+Reshape_t layer2_att_v_reshape 1 1 111 112 0=3 1=-1 2=8 3=64
+Matmul_t layer2_att_qkv_matmul 2 1 112 108 113
+Reshape_t layer2_att_qkv_reshape 1 1 113 114 0=2 1=-1 2=512
+MemoryData_t layer2_att_wo_weight 0 1 115 0=2 1=512 2=512 3=23497216
+Matmul_t layer2_att_wo_matmul 2 1 114 115 116
+BinaryOp_t layer2_att_shortcut 2 1 89 116 117 0=Add 1=Tensor
+UnaryOp_t layer2_ffnnorm_square 1 1 117 118 0=Square
+Reduction_t layer2_ffnnorm_mean 1 1 118 119 0=Mean 1=1
+BinaryOp_t layer2_ffnnorm_add 1 1 119 120 0=Add 1=Param 2=0.000010
+UnaryOp_t layer2_ffnnorm_rsq 1 1 120 121 0=Rsq
+BinaryOp_t layer2_ffnnorm_mul1 2 1 117 121 122 0=Mul 1=Tensor
+MemoryData_t layer2_ffnnorm_weight 0 1 123 0=1 1=512 2=23759360
+BinaryOp_t layer2_ffnnorm_mul2 2 1 122 123 124 0=Mul 1=Tensor
+MemoryData_t layer2_ffn_w1_weight 0 1 125 0=2 1=1376 2=512 3=23759872
+Matmul_t layer2_ffn_w1_matmul 2 1 124 125 126
+Swish_t layer2_ffn_w1_swish 1 1 126 127
+MemoryData_t layer2_ffn_w3_weight 0 1 128 0=2 1=1376 2=512 3=24464384
+Matmul_t layer2_ffn_w3_matmul 2 1 124 128 129
+BinaryOp_t layer2_ffn_mul 2 1 127 129 130 0=Mul 1=Tensor
+MemoryData_t layer2_ffn_w2_weight 0 1 131 0=2 1=512 2=1376 3=25168896
+Matmul_t layer2_ffn_w2_matmul 2 1 130 131 132
+BinaryOp_t layer2_ffn_shortcut 2 1 117 132 133 0=Add 1=Tensor
+UnaryOp_t layer3_attnorm_square 1 1 133 134 0=Square
+Reduction_t layer3_attnorm_mean 1 1 134 135 0=Mean 1=1
+BinaryOp_t layer3_attnorm_add 1 1 135 136 0=Add 1=Param 2=0.000010
+UnaryOp_t layer3_attnorm_rsq 1 1 136 137 0=Rsq
+BinaryOp_t layer3_attnorm_mul1 2 1 133 137 138 0=Mul 1=Tensor
+MemoryData_t layer3_attnorm_weight 0 1 139 0=1 1=512 2=25873408
+BinaryOp_t layer3_attnorm_mul2 2 1 138 139 140 0=Mul 1=Tensor
+MemoryData_t layer3_att_wq_weight 0 1 141 0=2 1=512 2=512 3=25873920
+Matmul_t layer3_att_q_linear 2 1 140 141 142
+Reshape_t layer3_att_q_reshape 1 1 142 143 0=3 1=-1 2=8 3=64
+Posenc_t layer3_att_q_posenc 3 1 143 freqs_cos freqs_sin 144
+MemoryData_t layer3_att_wk_weight 0 1 145 0=2 1=512 2=512 3=26136064
+Matmul_t layer3_att_k_linear 2 1 140 145 146
+Concat_t layer3_att_k_concat 2 1 k_cache_3 146 147 0=0
+Reshape_t layer3_att_k_reshape 1 1 147 148 0=3 1=-1 2=8 3=64
+Posenc_t layer3_att_k_posenc 3 1 148 freqs_cos freqs_sin 149
+Matmul_t layer3_att_qk_matmul 2 1 149 144 150
+BinaryOp_t layer3_att_qk_div 1 1 150 151 0=Div 1=Param 2=8
+Softmax_t layer3_att_qk_softmax 1 1 151 152 0=0
+MemoryData_t layer3_att_wv_weight 0 1 153 0=2 1=512 2=512 3=26398208
+Matmul_t layer3_att_v_linear 2 1 140 153 154
+Concat_t layer3_att_v_concat 2 1 v_cache_3 154 155 0=0
+Reshape_t layer3_att_v_reshape 1 1 155 156 0=3 1=-1 2=8 3=64
+Matmul_t layer3_att_qkv_matmul 2 1 156 152 157
+Reshape_t layer3_att_qkv_reshape 1 1 157 158 0=2 1=-1 2=512
+MemoryData_t layer3_att_wo_weight 0 1 159 0=2 1=512 2=512 3=26660352
+Matmul_t layer3_att_wo_matmul 2 1 158 159 160
+BinaryOp_t layer3_att_shortcut 2 1 133 160 161 0=Add 1=Tensor
+UnaryOp_t layer3_ffnnorm_square 1 1 161 162 0=Square
+Reduction_t layer3_ffnnorm_mean 1 1 162 163 0=Mean 1=1
+BinaryOp_t layer3_ffnnorm_add 1 1 163 164 0=Add 1=Param 2=0.000010
+UnaryOp_t layer3_ffnnorm_rsq 1 1 164 165 0=Rsq
+BinaryOp_t layer3_ffnnorm_mul1 2 1 161 165 166 0=Mul 1=Tensor
+MemoryData_t layer3_ffnnorm_weight 0 1 167 0=1 1=512 2=26922496
+BinaryOp_t layer3_ffnnorm_mul2 2 1 166 167 168 0=Mul 1=Tensor
+MemoryData_t layer3_ffn_w1_weight 0 1 169 0=2 1=1376 2=512 3=26923008
+Matmul_t layer3_ffn_w1_matmul 2 1 168 169 170
+Swish_t layer3_ffn_w1_swish 1 1 170 171
+MemoryData_t layer3_ffn_w3_weight 0 1 172 0=2 1=1376 2=512 3=27627520
+Matmul_t layer3_ffn_w3_matmul 2 1 168 172 173
+BinaryOp_t layer3_ffn_mul 2 1 171 173 174 0=Mul 1=Tensor
+MemoryData_t layer3_ffn_w2_weight 0 1 175 0=2 1=512 2=1376 3=28332032
+Matmul_t layer3_ffn_w2_matmul 2 1 174 175 176
+BinaryOp_t layer3_ffn_shortcut 2 1 161 176 177 0=Add 1=Tensor
+UnaryOp_t layer4_attnorm_square 1 1 177 178 0=Square
+Reduction_t layer4_attnorm_mean 1 1 178 179 0=Mean 1=1
+BinaryOp_t layer4_attnorm_add 1 1 179 180 0=Add 1=Param 2=0.000010
+UnaryOp_t layer4_attnorm_rsq 1 1 180 181 0=Rsq
+BinaryOp_t layer4_attnorm_mul1 2 1 177 181 182 0=Mul 1=Tensor
+MemoryData_t layer4_attnorm_weight 0 1 183 0=1 1=512 2=29036544
+BinaryOp_t layer4_attnorm_mul2 2 1 182 183 184 0=Mul 1=Tensor
+MemoryData_t layer4_att_wq_weight 0 1 185 0=2 1=512 2=512 3=29037056
+Matmul_t layer4_att_q_linear 2 1 184 185 186
+Reshape_t layer4_att_q_reshape 1 1 186 187 0=3 1=-1 2=8 3=64
+Posenc_t layer4_att_q_posenc 3 1 187 freqs_cos freqs_sin 188
+MemoryData_t layer4_att_wk_weight 0 1 189 0=2 1=512 2=512 3=29299200
+Matmul_t layer4_att_k_linear 2 1 184 189 190
+Concat_t layer4_att_k_concat 2 1 k_cache_4 190 191 0=0
+Reshape_t layer4_att_k_reshape 1 1 191 192 0=3 1=-1 2=8 3=64
+Posenc_t layer4_att_k_posenc 3 1 192 freqs_cos freqs_sin 193
+Matmul_t layer4_att_qk_matmul 2 1 193 188 194
+BinaryOp_t layer4_att_qk_div 1 1 194 195 0=Div 1=Param 2=8
+Softmax_t layer4_att_qk_softmax 1 1 195 196 0=0
+MemoryData_t layer4_att_wv_weight 0 1 197 0=2 1=512 2=512 3=29561344
+Matmul_t layer4_att_v_linear 2 1 184 197 198
+Concat_t layer4_att_v_concat 2 1 v_cache_4 198 199 0=0
+Reshape_t layer4_att_v_reshape 1 1 199 200 0=3 1=-1 2=8 3=64
+Matmul_t layer4_att_qkv_matmul 2 1 200 196 201
+Reshape_t layer4_att_qkv_reshape 1 1 201 202 0=2 1=-1 2=512
+MemoryData_t layer4_att_wo_weight 0 1 203 0=2 1=512 2=512 3=29823488
+Matmul_t layer4_att_wo_matmul 2 1 202 203 204
+BinaryOp_t layer4_att_shortcut 2 1 177 204 205 0=Add 1=Tensor
+UnaryOp_t layer4_ffnnorm_square 1 1 205 206 0=Square
+Reduction_t layer4_ffnnorm_mean 1 1 206 207 0=Mean 1=1
+BinaryOp_t layer4_ffnnorm_add 1 1 207 208 0=Add 1=Param 2=0.000010
+UnaryOp_t layer4_ffnnorm_rsq 1 1 208 209 0=Rsq
+BinaryOp_t layer4_ffnnorm_mul1 2 1 205 209 210 0=Mul 1=Tensor
+MemoryData_t layer4_ffnnorm_weight 0 1 211 0=1 1=512 2=30085632
+BinaryOp_t layer4_ffnnorm_mul2 2 1 210 211 212 0=Mul 1=Tensor
+MemoryData_t layer4_ffn_w1_weight 0 1 213 0=2 1=1376 2=512 3=30086144
+Matmul_t layer4_ffn_w1_matmul 2 1 212 213 214
+Swish_t layer4_ffn_w1_swish 1 1 214 215
+MemoryData_t layer4_ffn_w3_weight 0 1 216 0=2 1=1376 2=512 3=30790656
+Matmul_t layer4_ffn_w3_matmul 2 1 212 216 217
+BinaryOp_t layer4_ffn_mul 2 1 215 217 218 0=Mul 1=Tensor
+MemoryData_t layer4_ffn_w2_weight 0 1 219 0=2 1=512 2=1376 3=31495168
+Matmul_t layer4_ffn_w2_matmul 2 1 218 219 220
+BinaryOp_t layer4_ffn_shortcut 2 1 205 220 221 0=Add 1=Tensor
+UnaryOp_t layer5_attnorm_square 1 1 221 222 0=Square
+Reduction_t layer5_attnorm_mean 1 1 222 223 0=Mean 1=1
+BinaryOp_t layer5_attnorm_add 1 1 223 224 0=Add 1=Param 2=0.000010
+UnaryOp_t layer5_attnorm_rsq 1 1 224 225 0=Rsq
+BinaryOp_t layer5_attnorm_mul1 2 1 221 225 226 0=Mul 1=Tensor
+MemoryData_t layer5_attnorm_weight 0 1 227 0=1 1=512 2=32199680
+BinaryOp_t layer5_attnorm_mul2 2 1 226 227 228 0=Mul 1=Tensor
+MemoryData_t layer5_att_wq_weight 0 1 229 0=2 1=512 2=512 3=32200192
+Matmul_t layer5_att_q_linear 2 1 228 229 230
+Reshape_t layer5_att_q_reshape 1 1 230 231 0=3 1=-1 2=8 3=64
+Posenc_t layer5_att_q_posenc 3 1 231 freqs_cos freqs_sin 232
+MemoryData_t layer5_att_wk_weight 0 1 233 0=2 1=512 2=512 3=32462336
+Matmul_t layer5_att_k_linear 2 1 228 233 234
+Concat_t layer5_att_k_concat 2 1 k_cache_5 234 235 0=0
+Reshape_t layer5_att_k_reshape 1 1 235 236 0=3 1=-1 2=8 3=64
+Posenc_t layer5_att_k_posenc 3 1 236 freqs_cos freqs_sin 237
+Matmul_t layer5_att_qk_matmul 2 1 237 232 238
+BinaryOp_t layer5_att_qk_div 1 1 238 239 0=Div 1=Param 2=8
+Softmax_t layer5_att_qk_softmax 1 1 239 240 0=0
+MemoryData_t layer5_att_wv_weight 0 1 241 0=2 1=512 2=512 3=32724480
+Matmul_t layer5_att_v_linear 2 1 228 241 242
+Concat_t layer5_att_v_concat 2 1 v_cache_5 242 243 0=0
+Reshape_t layer5_att_v_reshape 1 1 243 244 0=3 1=-1 2=8 3=64
+Matmul_t layer5_att_qkv_matmul 2 1 244 240 245
+Reshape_t layer5_att_qkv_reshape 1 1 245 246 0=2 1=-1 2=512
+MemoryData_t layer5_att_wo_weight 0 1 247 0=2 1=512 2=512 3=32986624
+Matmul_t layer5_att_wo_matmul 2 1 246 247 248
+BinaryOp_t layer5_att_shortcut 2 1 221 248 249 0=Add 1=Tensor
+UnaryOp_t layer5_ffnnorm_square 1 1 249 250 0=Square
+Reduction_t layer5_ffnnorm_mean 1 1 250 251 0=Mean 1=1
+BinaryOp_t layer5_ffnnorm_add 1 1 251 252 0=Add 1=Param 2=0.000010
+UnaryOp_t layer5_ffnnorm_rsq 1 1 252 253 0=Rsq
+BinaryOp_t layer5_ffnnorm_mul1 2 1 249 253 254 0=Mul 1=Tensor
+MemoryData_t layer5_ffnnorm_weight 0 1 255 0=1 1=512 2=33248768
+BinaryOp_t layer5_ffnnorm_mul2 2 1 254 255 256 0=Mul 1=Tensor
+MemoryData_t layer5_ffn_w1_weight 0 1 257 0=2 1=1376 2=512 3=33249280
+Matmul_t layer5_ffn_w1_matmul 2 1 256 257 258
+Swish_t layer5_ffn_w1_swish 1 1 258 259
+MemoryData_t layer5_ffn_w3_weight 0 1 260 0=2 1=1376 2=512 3=33953792
+Matmul_t layer5_ffn_w3_matmul 2 1 256 260 261
+BinaryOp_t layer5_ffn_mul 2 1 259 261 262 0=Mul 1=Tensor
+MemoryData_t layer5_ffn_w2_weight 0 1 263 0=2 1=512 2=1376 3=34658304
+Matmul_t layer5_ffn_w2_matmul 2 1 262 263 264
+BinaryOp_t layer5_ffn_shortcut 2 1 249 264 265 0=Add 1=Tensor
+UnaryOp_t layer6_attnorm_square 1 1 265 266 0=Square
+Reduction_t layer6_attnorm_mean 1 1 266 267 0=Mean 1=1
+BinaryOp_t layer6_attnorm_add 1 1 267 268 0=Add 1=Param 2=0.000010
+UnaryOp_t layer6_attnorm_rsq 1 1 268 269 0=Rsq
+BinaryOp_t layer6_attnorm_mul1 2 1 265 269 270 0=Mul 1=Tensor
+MemoryData_t layer6_attnorm_weight 0 1 271 0=1 1=512 2=35362816
+BinaryOp_t layer6_attnorm_mul2 2 1 270 271 272 0=Mul 1=Tensor
+MemoryData_t layer6_att_wq_weight 0 1 273 0=2 1=512 2=512 3=35363328
+Matmul_t layer6_att_q_linear 2 1 272 273 274
+Reshape_t layer6_att_q_reshape 1 1 274 275 0=3 1=-1 2=8 3=64
+Posenc_t layer6_att_q_posenc 3 1 275 freqs_cos freqs_sin 276
+MemoryData_t layer6_att_wk_weight 0 1 277 0=2 1=512 2=512 3=35625472
+Matmul_t layer6_att_k_linear 2 1 272 277 278
+Concat_t layer6_att_k_concat 2 1 k_cache_6 278 279 0=0
+Reshape_t layer6_att_k_reshape 1 1 279 280 0=3 1=-1 2=8 3=64
+Posenc_t layer6_att_k_posenc 3 1 280 freqs_cos freqs_sin 281
+Matmul_t layer6_att_qk_matmul 2 1 281 276 282
+BinaryOp_t layer6_att_qk_div 1 1 282 283 0=Div 1=Param 2=8
+Softmax_t layer6_att_qk_softmax 1 1 283 284 0=0
+MemoryData_t layer6_att_wv_weight 0 1 285 0=2 1=512 2=512 3=35887616
+Matmul_t layer6_att_v_linear 2 1 272 285 286
+Concat_t layer6_att_v_concat 2 1 v_cache_6 286 287 0=0
+Reshape_t layer6_att_v_reshape 1 1 287 288 0=3 1=-1 2=8 3=64
+Matmul_t layer6_att_qkv_matmul 2 1 288 284 289
+Reshape_t layer6_att_qkv_reshape 1 1 289 290 0=2 1=-1 2=512
+MemoryData_t layer6_att_wo_weight 0 1 291 0=2 1=512 2=512 3=36149760
+Matmul_t layer6_att_wo_matmul 2 1 290 291 292
+BinaryOp_t layer6_att_shortcut 2 1 265 292 293 0=Add 1=Tensor
+UnaryOp_t layer6_ffnnorm_square 1 1 293 294 0=Square
+Reduction_t layer6_ffnnorm_mean 1 1 294 295 0=Mean 1=1
+BinaryOp_t layer6_ffnnorm_add 1 1 295 296 0=Add 1=Param 2=0.000010
+UnaryOp_t layer6_ffnnorm_rsq 1 1 296 297 0=Rsq
+BinaryOp_t layer6_ffnnorm_mul1 2 1 293 297 298 0=Mul 1=Tensor
+MemoryData_t layer6_ffnnorm_weight 0 1 299 0=1 1=512 2=36411904
+BinaryOp_t layer6_ffnnorm_mul2 2 1 298 299 300 0=Mul 1=Tensor
+MemoryData_t layer6_ffn_w1_weight 0 1 301 0=2 1=1376 2=512 3=36412416
+Matmul_t layer6_ffn_w1_matmul 2 1 300 301 302
+Swish_t layer6_ffn_w1_swish 1 1 302 303
+MemoryData_t layer6_ffn_w3_weight 0 1 304 0=2 1=1376 2=512 3=37116928
+Matmul_t layer6_ffn_w3_matmul 2 1 300 304 305
+BinaryOp_t layer6_ffn_mul 2 1 303 305 306 0=Mul 1=Tensor
+MemoryData_t layer6_ffn_w2_weight 0 1 307 0=2 1=512 2=1376 3=37821440
+Matmul_t layer6_ffn_w2_matmul 2 1 306 307 308
+BinaryOp_t layer6_ffn_shortcut 2 1 293 308 309 0=Add 1=Tensor
+UnaryOp_t layer7_attnorm_square 1 1 309 310 0=Square
+Reduction_t layer7_attnorm_mean 1 1 310 311 0=Mean 1=1
+BinaryOp_t layer7_attnorm_add 1 1 311 312 0=Add 1=Param 2=0.000010
+UnaryOp_t layer7_attnorm_rsq 1 1 312 313 0=Rsq
+BinaryOp_t layer7_attnorm_mul1 2 1 309 313 314 0=Mul 1=Tensor
+MemoryData_t layer7_attnorm_weight 0 1 315 0=1 1=512 2=38525952
+BinaryOp_t layer7_attnorm_mul2 2 1 314 315 316 0=Mul 1=Tensor
+MemoryData_t layer7_att_wq_weight 0 1 317 0=2 1=512 2=512 3=38526464
+Matmul_t layer7_att_q_linear 2 1 316 317 318
+Reshape_t layer7_att_q_reshape 1 1 318 319 0=3 1=-1 2=8 3=64
+Posenc_t layer7_att_q_posenc 3 1 319 freqs_cos freqs_sin 320
+MemoryData_t layer7_att_wk_weight 0 1 321 0=2 1=512 2=512 3=38788608
+Matmul_t layer7_att_k_linear 2 1 316 321 322
+Concat_t layer7_att_k_concat 2 1 k_cache_7 322 323 0=0
+Reshape_t layer7_att_k_reshape 1 1 323 324 0=3 1=-1 2=8 3=64
+Posenc_t layer7_att_k_posenc 3 1 324 freqs_cos freqs_sin 325
+Matmul_t layer7_att_qk_matmul 2 1 325 320 326
+BinaryOp_t layer7_att_qk_div 1 1 326 327 0=Div 1=Param 2=8
+Softmax_t layer7_att_qk_softmax 1 1 327 328 0=0
+MemoryData_t layer7_att_wv_weight 0 1 329 0=2 1=512 2=512 3=39050752
+Matmul_t layer7_att_v_linear 2 1 316 329 330
+Concat_t layer7_att_v_concat 2 1 v_cache_7 330 331 0=0
+Reshape_t layer7_att_v_reshape 1 1 331 332 0=3 1=-1 2=8 3=64
+Matmul_t layer7_att_qkv_matmul 2 1 332 328 333
+Reshape_t layer7_att_qkv_reshape 1 1 333 334 0=2 1=-1 2=512
+MemoryData_t layer7_att_wo_weight 0 1 335 0=2 1=512 2=512 3=39312896
+Matmul_t layer7_att_wo_matmul 2 1 334 335 336
+BinaryOp_t layer7_att_shortcut 2 1 309 336 337 0=Add 1=Tensor
+UnaryOp_t layer7_ffnnorm_square 1 1 337 338 0=Square
+Reduction_t layer7_ffnnorm_mean 1 1 338 339 0=Mean 1=1
+BinaryOp_t layer7_ffnnorm_add 1 1 339 340 0=Add 1=Param 2=0.000010
+UnaryOp_t layer7_ffnnorm_rsq 1 1 340 341 0=Rsq
+BinaryOp_t layer7_ffnnorm_mul1 2 1 337 341 342 0=Mul 1=Tensor
+MemoryData_t layer7_ffnnorm_weight 0 1 343 0=1 1=512 2=39575040
+BinaryOp_t layer7_ffnnorm_mul2 2 1 342 343 344 0=Mul 1=Tensor
+MemoryData_t layer7_ffn_w1_weight 0 1 345 0=2 1=1376 2=512 3=39575552
+Matmul_t layer7_ffn_w1_matmul 2 1 344 345 346
+Swish_t layer7_ffn_w1_swish 1 1 346 347
+MemoryData_t layer7_ffn_w3_weight 0 1 348 0=2 1=1376 2=512 3=40280064
+Matmul_t layer7_ffn_w3_matmul 2 1 344 348 349
+BinaryOp_t layer7_ffn_mul 2 1 347 349 350 0=Mul 1=Tensor
+MemoryData_t layer7_ffn_w2_weight 0 1 351 0=2 1=512 2=1376 3=40984576
+Matmul_t layer7_ffn_w2_matmul 2 1 350 351 352
+BinaryOp_t layer7_ffn_shortcut 2 1 337 352 353 0=Add 1=Tensor
 UnaryOp_t outnorm_square 1 1 353 354 0=Square
 Reduction_t outnorm_mean 1 1 354 355 0=Mean 1=1
 BinaryOp_t outnorm_add 1 1 355 356 0=Add 1=Param 2=0.000010
