@@ -289,8 +289,8 @@ int main(int argc, char** argv) {
         graph->extract("output", output);
 
         //暂时直接写数字读取kvcache输出
-        int kcache_start = 14;
-        int vcache_start = 22;
+        int kcache_start = 15;
+        int vcache_start = 23;
         for(int i = 0; i < n_layers; i++)
         {
             Tensor* kcache_out;

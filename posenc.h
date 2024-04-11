@@ -16,6 +16,8 @@ class Posenc: public Layer
         void forward(vector<Tensor*> &input, vector<Tensor*> &output);
 
         static int CreateInstance(Layer* &layer);
+    private:
+        int _use_last;
 };
 
 #endif

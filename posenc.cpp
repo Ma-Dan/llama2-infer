@@ -5,6 +5,7 @@
 
 Posenc::Posenc()
 {
+    _use_last = 0;
 }
 
 Posenc::~Posenc()
@@ -13,6 +14,9 @@ Posenc::~Posenc()
 
 int Posenc::load_model(const vector<string> &params, FILE* fp)
 {
+    vector<string> use_last_param = split(params[8], "=");
+    _use_last = atoi(use_last_param[1].c_str());
+
     return 0;
 }
 
@@ -36,10 +40,18 @@ void Posenc::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 
     vector<float>* freqs_cos = input[1]->get_data();
     vector<float>* freqs_sin = input[2]->get_data();
-    int freqOffset = (input[1]->get_shape()[0]-1)*input[1]->get_shape()[1];
 
     for(int i=0; i<outputShape[0]; i++)
     {
+        int freqOffset;
+        if(_use_last)
+        {
+            freqOffset = (input[1]->get_shape()[0]-1)*input[1]->get_shape()[1];
+        }
+        else
+        {
+            freqOffset = i*input[1]->get_shape()[1];
+        }
         for(int j=0; j<outputShape[1]; j++)
         {
             for(int k=0; k<outputShape[2]/2; k++)

@@ -58,9 +58,9 @@ def reshape2_node(param, node_name, dim0, dim1, idx):
     param.append("Reshape_t {} 1 1 {} {} 0=2 1={} 2={}".format(node_name, idx, idx_output, dim0, dim1))
     return idx_output
 
-def posenc_node(param, node_name, idx):
+def posenc_node(param, node_name, use_last, idx):
     idx_output = idx+1
-    param.append("Posenc_t {} 3 1 {} freqs_cos freqs_sin {}".format(node_name, idx, idx_output))
+    param.append("Posenc_t {} 3 1 {} freqs_cos freqs_sin {} 0={}".format(node_name, idx, idx_output, use_last))
     return idx_output
 
 def concat_node(param, node_name, input_name, idx):
@@ -92,14 +92,14 @@ def transformer_layer(param, layer_idx, idx_input, weight_offset):
     idx_att_wq_weight, weight_offset = memorydata2_node(param, "layer{}_att_wq_weight".format(layer_idx), 512, 512, weight_offset, idx_attnorm_mul2)
     idx_att_q_linear = matmul_node(param, "layer{}_att_q_linear".format(layer_idx), idx_attnorm_mul2, idx_att_wq_weight)
     idx_att_q_reshape = reshape3_node(param, "layer{}_att_q_reshape".format(layer_idx), -1, 8, 64, idx_att_q_linear)
-    idx_att_q_posenc = posenc_node(param, "layer{}_att_q_posenc".format(layer_idx), idx_att_q_reshape)
+    idx_att_q_posenc = posenc_node(param, "layer{}_att_q_posenc".format(layer_idx), 1, idx_att_q_reshape)
 
     #K
     idx_att_wk_weight, weight_offset = memorydata2_node(param, "layer{}_att_wk_weight".format(layer_idx), 512, 512, weight_offset, idx_att_q_posenc)
     idx_att_k_linear = matmul_node(param, "layer{}_att_k_linear".format(layer_idx), idx_attnorm_mul2, idx_att_wk_weight)
     idx_att_k_concat = concat_node(param, "layer{}_att_k_concat".format(layer_idx), "k_cache_{}".format(layer_idx), idx_att_k_linear)
     idx_att_k_reshape = reshape3_node(param, "layer{}_att_k_reshape".format(layer_idx), -1, 8, 64, idx_att_k_concat)
-    idx_att_k_posenc = posenc_node(param, "layer{}_att_k_posenc".format(layer_idx), idx_att_k_reshape)
+    idx_att_k_posenc = posenc_node(param, "layer{}_att_k_posenc".format(layer_idx), 0, idx_att_k_reshape)
 
     #QK
     idx_att_qk_matmul = matmul_node(param, "layer{}_att_qk_matmul".format(layer_idx), idx_att_k_posenc, idx_att_q_posenc)
@@ -243,6 +243,6 @@ def export_model(checkpoint, param_file_path, bin_file_path):
     bin_file.close()
 
 if __name__ == "__main__":
-    export_model('../models/tinyllamas/stories42M.pt', './test.ncnn.param', './test.ncnn.bin')
+    export_model('/mnt/d/llama2/tinyllamas/stories42M.pt', './test.ncnn.param', './test.ncnn.bin')
 
 
