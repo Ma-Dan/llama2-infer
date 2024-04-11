@@ -2,6 +2,8 @@
 #define TENSOR_H
 
 #include <vector>
+#include <memory.h>
+#include <stdio.h>
 
 using namespace std;
 

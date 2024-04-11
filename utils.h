@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <memory.h>
+#include <stdlib.h>
 
 using namespace std;
 

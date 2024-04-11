@@ -41,7 +41,6 @@ int Graph::load_model(string file_name)
             Node* node = new Node(this, params);
             node->load_model(params, fp);
             _nodes.push_back(node);
-            cout << params[0] << endl;
         }
         index++;
     }
