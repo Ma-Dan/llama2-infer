@@ -13,6 +13,7 @@
 
 #include "tensor.h"
 #include "graph.h"
+#include "utils.h"
 
 const int vocab_size = 32000;
 
@@ -184,6 +185,36 @@ int sample(const std::vector<float>& logits, float temp, float topp, int topk) {
     return probs[last].second;
 }
 
+int get_model_params(string file_name, int* ctx_length, int* n_layers, int* dim, int* n_heads, int* kcache_start, int* vcache_start, int* kvcache_step)
+{
+    string param_file_name = file_name + ".param";
+
+    ifstream fin(param_file_name.c_str());
+
+    int index = 0;
+    string strline;
+    while(getline(fin, strline))
+    {
+        if(index == 1)
+        {
+            vector<string> params = split(strline, " ");
+            *ctx_length = atoi(params[0].c_str());
+            *n_layers = atoi(params[1].c_str());
+            *dim = atoi(params[2].c_str());
+            *n_heads = atoi(params[3].c_str());
+            *kcache_start = atoi(params[4].c_str());
+            *vcache_start = atoi(params[5].c_str());
+            *kvcache_step = atoi(params[6].c_str());
+            break;
+        }
+        index++;
+    }
+
+    fin.close();
+
+    return 0;
+}
+
 // ./inference MODEL PROMPT OUT-TOKEN-COUNT
 int main(int argc, char** argv) {
     if (argc != 4) {
@@ -198,10 +229,8 @@ int main(int argc, char** argv) {
 
     // 模型的基本参数
     int ctx_length, n_layers, dim, n_heads;
-    ctx_length = 256;
-    n_layers = 8;
-    dim = 512;
-    n_heads = 8;
+    int kcache_start, vcache_start, kvcache_step;
+    get_model_params(model_name, &ctx_length, &n_layers, &dim, &n_heads, &kcache_start, &vcache_start, &kvcache_step);
 
     std::vector<Tensor*> kcache, vcache;
     std::vector<float> freqs_cos_table, freqs_sin_table;
@@ -288,18 +317,16 @@ int main(int argc, char** argv) {
         Tensor* output;
         graph->extract("output", output);
 
-        //暂时直接写数字读取kvcache输出
-        int kcache_start = 15;
-        int vcache_start = 23;
+        //kvcache输出
         for(int i = 0; i < n_layers; i++)
         {
             Tensor* kcache_out;
-            graph->get_result(std::to_string(kcache_start+i*44), kcache_out);
+            graph->get_result(std::to_string(kcache_start+i*kvcache_step), kcache_out);
             kcache[i]->set_shape(kcache_out->get_shape());
             kcache[i]->set_data(*kcache_out->get_data());
 
             Tensor* vcache_out;
-            graph->get_result(std::to_string(vcache_start+i*44), vcache_out);
+            graph->get_result(std::to_string(vcache_start+i*kvcache_step), vcache_out);
             vcache[i]->set_shape(vcache_out->get_shape());
             vcache[i]->set_data(*vcache_out->get_data());
         }
