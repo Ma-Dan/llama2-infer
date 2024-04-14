@@ -17,7 +17,7 @@
 
 const int vocab_size = 32000;
 
-const float temp = 1, topp = 0.9;
+float temp = 1, topp = 0.9;
 const int topk = 300;
 
 struct bpe {
@@ -187,7 +187,7 @@ int sample(const std::vector<float>& logits, float temp, float topp, int topk) {
 
 int get_model_params(string file_name, int* ctx_length, int* n_layers, int* dim, int* n_heads, int* kcache_start, int* vcache_start, int* kvcache_step)
 {
-    string param_file_name = file_name + ".param";
+    string param_file_name = file_name + ".ncnn.param";
 
     ifstream fin(param_file_name.c_str());
 
@@ -217,15 +217,17 @@ int get_model_params(string file_name, int* ctx_length, int* n_layers, int* dim,
 
 // ./inference MODEL PROMPT OUT-TOKEN-COUNT
 int main(int argc, char** argv) {
-    if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " MODEL PROMPT OUT-TOKEN-COUNT"
+    if (argc != 5) {
+        std::cerr << "Usage: " << argv[0] << " MODEL PROMPT OUT-TOKEN-COUNT TEMPERATURE"
                   << std::endl;
         return 1;
     }
 
-    std::string model_name = argv[1],
-                tokenizer_path = "tokenizer.bin", prompt = argv[2];
+    std::string model_name = argv[1];
+    std::string prompt = argv[2];
+    std::string tokenizer_path = model_name + "_tokenizer.bin";
     int token_count = std::stoi(argv[3]);
+    temp = std::atof(argv[4]);
 
     // 模型的基本参数
     int ctx_length, n_layers, dim, n_heads;

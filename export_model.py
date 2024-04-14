@@ -1,7 +1,9 @@
 import struct
+import sys
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import StoppingCriteria, StoppingCriteriaList
+from sentencepiece import SentencePieceProcessor
 
 def input_node(param, node_name, out_name):
     param.append("Input_t {} 0 1 {}".format(node_name, out_name))
@@ -212,7 +214,44 @@ def serialize_fp32(file, tensor):
     b = struct.pack(f'{len(d)}f', *d)
     file.write(b)
 
-def export_model(model_path, param_file_path, bin_file_path):
+def export_tokenizer(model_path, model_name):
+    sp_model = SentencePieceProcessor(model_file="{}/tokenizer.model".format(model_path))
+
+    # get all the tokens (postprocessed) and their scores as floats
+    tokens, scores = [], []
+    for i in range(sp_model.vocab_size()):
+
+        # decode the token and light postprocessing
+        t = sp_model.id_to_piece(i)
+        s = sp_model.get_score(i)
+        if i == sp_model.bos_id():
+            t = '\n<s>\n'
+        elif i == sp_model.eos_id():
+            t = '\n</s>\n'
+        t = t.replace('▁', ' ') # sentencepiece uses this character as whitespace
+        b = t.encode('utf-8') # bytes of this token, utf-8 encoded
+
+        tokens.append(b)
+        scores.append(s)
+
+    # record the max token length
+    max_token_length = max(len(t) for t in tokens)
+
+    tokenizer_bin = "{}_tokenizer.bin".format(model_name)
+    with open(tokenizer_bin, 'wb') as f:
+        f.write(struct.pack("I", max_token_length))
+        for bytes, score in zip(tokens, scores):
+            f.write(struct.pack("fI", score, len(bytes)))
+            f.write(bytes)
+
+def export_model():
+    args = sys.argv
+    if len(args) < 3:
+        print("Usage: python export_model.py hf_model_path output_model_name")
+
+    model_path = args[1]
+    model_name = args[2]
+
     model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code = True)
 
     print(model)
@@ -220,7 +259,7 @@ def export_model(model_path, param_file_path, bin_file_path):
     param = []
     model_param(model, param)
 
-    param_file = open(param_file_path, 'w')
+    param_file = open("{}.ncnn.param".format(model_name), 'w')
     for i in range(len(param)):
         p = param[i]
         if i < len(param)-1:
@@ -229,7 +268,7 @@ def export_model(model_path, param_file_path, bin_file_path):
             param_file.write(p)
     param_file.close()
 
-    bin_file = open(bin_file_path, 'wb')
+    bin_file = open("{}.ncnn.bin".format(model_name), 'wb')
 
     model_attention = model.model
     lm_head = model.lm_head
@@ -257,7 +296,10 @@ def export_model(model_path, param_file_path, bin_file_path):
 
     bin_file.close()
 
+    #存储tokenizer
+    export_tokenizer(model_path, model_name)
+
 if __name__ == "__main__":
-    export_model('../models/chinese-baby-llama2', './test.ncnn.param', './test.ncnn.bin')
+    export_model()
 
 

@@ -25,8 +25,8 @@ Graph::~Graph()
 
 int Graph::load_model(string file_name)
 {
-    string param_file_name = file_name + ".param";
-    string bin_file_name = file_name + ".bin";
+    string param_file_name = file_name + ".ncnn.param";
+    string bin_file_name = file_name + ".ncnn.bin";
 
     ifstream fin(param_file_name.c_str());
     FILE *fp = fopen(bin_file_name.c_str(), "rb");
