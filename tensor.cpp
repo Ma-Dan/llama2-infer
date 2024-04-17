@@ -1,14 +1,30 @@
 #include "tensor.h"
 #include "utils.h"
+#include "cuda_function.h"
 
 Tensor::Tensor()
 {
-
+    _device_type = Tensor_CPU;
 }
 
 Tensor::~Tensor()
 {
     clear();
+}
+
+int Tensor::get_device_type()
+{
+    return _device_type;
+}
+
+void Tensor::set_device_type(int device_type)
+{
+    _device_type = device_type;
+}
+
+float* Tensor::get_device_data()
+{
+    return _device_data;
 }
 
 int Tensor::set_shape(const vector<int> shape)
@@ -65,10 +81,28 @@ vector<int> Tensor::get_shape()
     return _shape;
 }
 
+int Tensor::get_size()
+{
+    int size = 1;
+    for(int i=0; i<_shape.size(); i++)
+    {
+        size *= _shape[i];
+    }
+
+    return size;
+}
+
 int Tensor::load_data(FILE *fp, long offset)
 {
     fseek(fp, offset, SEEK_SET);
     fread(_data.data(), _data.size(), sizeof(float), fp);
+
+    if(_device_type == Tensor_GPU)
+    {
+        mallocGPUData(&_device_data, _data.size()*sizeof(float));
+        uploadGPUData(_device_data, (void*)_data.data(), _data.size()*sizeof(float));
+    }
+
     return 0;
 }
 
@@ -76,4 +110,9 @@ void Tensor::clear()
 {
     _shape.clear();
     _data.clear();
+
+    if(_device_type == Tensor_GPU)
+    {
+        freeGPUData(_device_data);
+    }
 }

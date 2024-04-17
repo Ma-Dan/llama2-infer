@@ -7,6 +7,12 @@
 
 using namespace std;
 
+enum
+{
+    Tensor_CPU = 0,
+    Tensor_GPU,
+};
+
 class Tensor
 {
     public:
@@ -18,12 +24,20 @@ class Tensor
         void set_data(const vector<float> data);
         vector<float>* get_data();
         vector<int> get_shape();
+        int get_size();
+
+        int get_device_type();
+        void set_device_type(int device_type);
+        float* get_device_data();
 
     private:
         vector<int> _shape;
         vector<float> _data;
 
         void clear();
+
+        int _device_type;
+        float* _device_data;
 };
 
 #endif

@@ -14,6 +14,7 @@
 #include "tensor.h"
 #include "graph.h"
 #include "utils.h"
+#include "cuda_function.h"
 
 const int vocab_size = 32000;
 
@@ -223,6 +224,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    createCublas();
+
     std::string model_name = argv[1];
     std::string prompt = argv[2];
     std::string tokenizer_path = model_name + "_tokenizer.bin";
@@ -346,6 +349,8 @@ int main(int argc, char** argv) {
               << std::endl;
 
     delete graph;
+
+    destroyCublas();
 
     exit(0);
 }

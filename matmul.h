@@ -6,6 +6,12 @@
 #include "layer.h"
 #include "tensor.h"
 
+enum
+{
+    Matmul_CPU = 0,
+    Matmul_GPU
+};
+
 class Matmul: public Layer
 {
     public:
@@ -16,6 +22,10 @@ class Matmul: public Layer
         void forward(vector<Tensor*> &input, vector<Tensor*> &output);
 
         static int CreateInstance(Layer* &layer);
+    private:
+        int _matmul_type;
+        float* _input_data;
+        float* _output_data;
 };
 
 #endif

@@ -29,6 +29,12 @@ int MemoryData::load_model(const vector<string> &params, FILE* fp)
     vector<string> weight_offset_param = split(params[6+shape_dim], "=");
     long weight_offset = atol(weight_offset_param[1].c_str());
 
+    vector<string> device_param = split(params[7+shape_dim], "=");
+    if("GPU" == device_param[1])
+    {
+        _weight->set_device_type(Tensor_GPU);
+    }
+
     _weight->load_data(fp, weight_offset*sizeof(float));
 
     return 0;

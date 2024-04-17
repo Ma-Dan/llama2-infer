@@ -34,12 +34,12 @@ def binary2_node(param, node_name, operate, idx1, idx2):
 
 def memorydata1_node(param, node_name, dim0, weight_offset, idx):
     idx_output = idx+1
-    param.append("MemoryData_t {} 0 1 {} 0=1 1={} 2={}".format(node_name, idx_output, dim0, weight_offset))
+    param.append("MemoryData_t {} 0 1 {} 0=1 1={} 2={} 4=CPU".format(node_name, idx_output, dim0, weight_offset))
     return idx_output, weight_offset+dim0
 
 def memorydata2_node(param, node_name, dim0, dim1, weight_offset, idx):
     idx_output = idx+1
-    param.append("MemoryData_t {} 0 1 {} 0=2 1={} 2={} 3={}".format(node_name, idx_output, dim0, dim1, weight_offset))
+    param.append("MemoryData_t {} 0 1 {} 0=2 1={} 2={} 3={} 4=GPU".format(node_name, idx_output, dim0, dim1, weight_offset))
     return idx_output, weight_offset+dim0*dim1
 
 def matmul_node(param, node_name, idx1, idx2):

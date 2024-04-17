@@ -1,13 +1,22 @@
 #include "matmul.h"
 #include "layer_register.h"
 #include "utils.h"
+#include "cuda_function.h"
 
 Matmul::Matmul()
 {
+    _matmul_type = Matmul_CPU;
+    _input_data = NULL;
+    _output_data = NULL;
 }
 
 Matmul::~Matmul()
 {
+    if(_matmul_type == Matmul_GPU)
+    {
+        freeGPUData(_input_data);
+        freeGPUData(_output_data);
+    }
 }
 
 int Matmul::load_model(const vector<string> &params, FILE* fp)
@@ -32,6 +41,20 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     vector<int> input0Shape = input[0]->get_shape();
     vector<int> input1Shape = input[1]->get_shape();
 
+    if(input[1]->get_device_type() == Tensor_GPU)
+    {
+        _matmul_type = Matmul_GPU;
+        if(_input_data == NULL)
+        {
+            mallocGPUData(&_input_data, input[0]->get_size()*sizeof(float));
+        }
+
+        if(_output_data == NULL)
+        {
+            mallocGPUData(&_output_data, input0Shape[0]*input1Shape[0]*sizeof(float));
+        }
+    }
+
     if(input0Shape.size() == 2 && input1Shape.size() == 2)
     {
         //Linear
@@ -46,18 +69,25 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
-        #pragma omp parallel for private(i)
-        for(int i=0; i<input0Shape[0]; i++)
+        if(_matmul_type == Matmul_CPU)
         {
-            for(int j=0; j<input1Shape[0]; j++)
+            #pragma omp parallel for private(i)
+            for(int i=0; i<input0Shape[0]; i++)
             {
-                float sum = 0.0f;
-                for(int k=0; k<input0Shape[1]; k++)
+                for(int j=0; j<input1Shape[0]; j++)
                 {
-                    sum += input0Data->data()[i*input0Shape[1]+k] * input1Data->data()[j*input1Shape[1]+k];
+                    float sum = 0.0f;
+                    for(int k=0; k<input0Shape[1]; k++)
+                    {
+                        sum += input0Data->data()[i*input0Shape[1]+k] * input1Data->data()[j*input1Shape[1]+k];
+                    }
+                    outputData->data()[i*input1Shape[0]+j] = sum;
                 }
-                outputData->data()[i*input1Shape[0]+j] = sum;
             }
+        }
+        else
+        {
+            matmul_cublas(outputData->data(), input0Data->data(), input[1]->get_device_data(), _input_data, _output_data, input0Shape[1], input1Shape[0]);
         }
     }
     else if(input0Shape.size() == 3 && input1Shape.size() == 3)
