@@ -9,7 +9,7 @@ from model import ModelArgs, Transformer
 from tokenizer import Tokenizer
 
 # -----------------------------------------------------------------------------
-checkpoint = '../models/tinyllamas/stories42M.pt'
+checkpoint = './chinese-baby-llama2.pt'
 start = "" # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE:prompt.txt"
 num_samples = 1 # number of samples to draw
 max_new_tokens = 256 # number of tokens generated in each sample
@@ -53,24 +53,14 @@ if compile:
 # load the tokenizer
 vocab_source = checkpoint_dict.get("vocab_source", "llama2")
 vocab_size = gptconf.vocab_size
-if tokenizer:
-    # a specific tokenizer is provided, use it
-    tokenizer_model = tokenizer
-else:
-    # let's try to find the tokenizer model automatically. bit gross here...
-    query_vocab_size = 0 if vocab_source == "llama2" else vocab_size
-    tokenizer_model = "../models/stories42M/tokenizer.model"
-enc = Tokenizer(tokenizer_model=tokenizer_model)
+enc = Tokenizer(tokenizer_model="/mnt/d/llama2/chinese-baby-llama2/tokenizer.model")
 
 # encode the beginning of the prompt
 if start.startswith('FILE:'):
     with open(start[5:], 'r', encoding='utf-8') as f:
         start = f.read()
 start_ids = enc.encode(start, bos=True, eos=False)
-
-ids = start_ids + [0] * (256-len(start_ids))
-
-x = (torch.tensor(ids, dtype=torch.long, device=device)[None, ...])
+x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
 
 # run generation
 with torch.no_grad():

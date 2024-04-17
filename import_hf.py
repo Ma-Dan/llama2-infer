@@ -8,14 +8,14 @@ model_args = dict(
     n_heads=12,
     n_kv_heads=12,
     vocab_size=32000,
-    multiple_of=2268,
+    hidden_dim=2268,
     max_seq_len=1024,
     dropout=0.0,
 )
 
 gptconf = ModelArgs(**model_args)
 
-data = torch.load(f"../models/chinese-baby-llama2/pytorch_model.bin")
+data = torch.load(f"/mnt/d/llama2/chinese-baby-llama2/pytorch_model.bin")
 
 renamed_data = {}
 model = {}
@@ -30,8 +30,8 @@ for k, v in data.items():
     k = k.replace(".self_attn.o_proj", ".attention.wo")
     k = k.replace("model.norm.weight", "norm.weight")
     k = k.replace("lm_head.weight", "output.weight")
-    k = k.replace("post_attention_layernorm", "ffn_model.norm")
-    k = k.replace("input_layernorm", "attention_model.norm")
+    k = k.replace("post_attention_layernorm.weight", "ffn_norm.weight")
+    k = k.replace("input_layernorm.weight", "attention_norm.weight")
     k = k.replace("model.embed_tokens.weight", "tok_embeddings.weight")
     model[k] = v
 
