@@ -77,6 +77,10 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                 for(int j=0; j<input1Shape[0]; j++)
                 {
                     float sum = 0.0f;
+                    if(input[1]->has_bias())
+                    {
+                        sum = input[1]->get_bias()->data()[j];
+                    }
                     for(int k=0; k<input0Shape[1]; k++)
                     {
                         sum += input0Data->data()[i*input0Shape[1]+k] * input1Data->data()[j*input1Shape[1]+k];
@@ -87,7 +91,14 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         }
         else
         {
-            matmul_cublas(outputData->data(), input0Data->data(), input[1]->get_device_data(), _input_data, _output_data, input0Shape[1], input1Shape[0]);
+            if(input[1]->has_bias())
+            {
+                matmul_cublas(outputData->data(), input0Data->data(), input[1]->get_device_data(), input[1]->get_bias()->data(), _input_data, _output_data, input0Shape[1], input1Shape[0]);
+            }
+            else
+            {
+                matmul_cublas(outputData->data(), input0Data->data(), input[1]->get_device_data(), NULL, _input_data, _output_data, input0Shape[1], input1Shape[0]);
+            }
         }
     }
     else if(input0Shape.size() == 3 && input1Shape.size() == 3)

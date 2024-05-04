@@ -34,13 +34,17 @@ def binary2_node(param, node_name, operate, idx1, idx2):
 
 def memorydata1_node(param, node_name, dim0, weight_offset, idx):
     idx_output = idx+1
-    param.append("MemoryData_t {} 0 1 {} 0=1 1={} 2={} 4=CPU".format(node_name, idx_output, dim0, weight_offset))
+    param.append("MemoryData_t {} 0 1 {} 0=1 1={} 2={} 4=CPU 5=0".format(node_name, idx_output, dim0, weight_offset))
     return idx_output, weight_offset+dim0
 
-def memorydata2_node(param, node_name, dim0, dim1, weight_offset, idx):
+def memorydata2_node(param, node_name, dim0, dim1, bias, weight_offset, idx):
     idx_output = idx+1
-    param.append("MemoryData_t {} 0 1 {} 0=2 1={} 2={} 3={} 4=GPU".format(node_name, idx_output, dim0, dim1, weight_offset))
-    return idx_output, weight_offset+dim0*dim1
+    param.append("MemoryData_t {} 0 1 {} 0=2 1={} 2={} 3={} 4=GPU 5={}".format(node_name, idx_output, dim0, dim1, weight_offset, bias))
+    if bias:
+        weight_offset = weight_offset+dim0*dim1+dim0
+    else:
+        weight_offset = weight_offset+dim0*dim1
+    return idx_output, weight_offset
 
 def matmul_node(param, node_name, idx1, idx2):
     idx_output = max(idx1, idx2)+1
@@ -94,13 +98,13 @@ def transformer_layer(model, param, layer_idx, idx_input, weight_offset):
     idx_attnorm_mul2 = binary2_node(param, "layer{}_attnorm_mul2".format(layer_idx), "Mul", idx_attnorm_mul1, idx_attnorm_weight)
 
     #Q
-    idx_att_wq_weight, weight_offset = memorydata2_node(param, "layer{}_att_wq_weight".format(layer_idx), hidden_size, hidden_size, weight_offset, idx_attnorm_mul2)
+    idx_att_wq_weight, weight_offset = memorydata2_node(param, "layer{}_att_wq_weight".format(layer_idx), hidden_size, hidden_size, 1, weight_offset, idx_attnorm_mul2)
     idx_att_q_linear = matmul_node(param, "layer{}_att_q_linear".format(layer_idx), idx_attnorm_mul2, idx_att_wq_weight)
     idx_att_q_reshape = reshape3_node(param, "layer{}_att_q_reshape".format(layer_idx), -1, num_attention_heads, attention_dim, idx_att_q_linear)
     idx_att_q_posenc = posenc_node(param, "layer{}_att_q_posenc".format(layer_idx), 1, idx_att_q_reshape)
 
     #K
-    idx_att_wk_weight, weight_offset = memorydata2_node(param, "layer{}_att_wk_weight".format(layer_idx), hidden_size, hidden_size, weight_offset, idx_att_q_posenc)
+    idx_att_wk_weight, weight_offset = memorydata2_node(param, "layer{}_att_wk_weight".format(layer_idx), hidden_size, hidden_size, 1, weight_offset, idx_att_q_posenc)
     idx_att_k_linear = matmul_node(param, "layer{}_att_k_linear".format(layer_idx), idx_attnorm_mul2, idx_att_wk_weight)
     idx_att_k_concat = concat_node(param, "layer{}_att_k_concat".format(layer_idx), "k_cache_{}".format(layer_idx), idx_att_k_linear)
     idx_att_k_reshape = reshape3_node(param, "layer{}_att_k_reshape".format(layer_idx), -1, num_attention_heads, attention_dim, idx_att_k_concat)
@@ -112,7 +116,7 @@ def transformer_layer(model, param, layer_idx, idx_input, weight_offset):
     idx_att_qk_softmax = softmax_node(param, "layer{}_att_qk_softmax".format(layer_idx), idx_att_qk_div)
 
     #V
-    idx_att_wv_weight, weight_offset = memorydata2_node(param, "layer{}_att_wv_weight".format(layer_idx), hidden_size, hidden_size, weight_offset, idx_att_qk_softmax)
+    idx_att_wv_weight, weight_offset = memorydata2_node(param, "layer{}_att_wv_weight".format(layer_idx), hidden_size, hidden_size, 1, weight_offset, idx_att_qk_softmax)
     idx_att_v_linear = matmul_node(param, "layer{}_att_v_linear".format(layer_idx), idx_attnorm_mul2, idx_att_wv_weight)
     idx_att_v_concat = concat_node(param, "layer{}_att_v_concat".format(layer_idx), "v_cache_{}".format(layer_idx), idx_att_v_linear)
     idx_att_v_reshape = reshape3_node(param, "layer{}_att_v_reshape".format(layer_idx), -1, num_attention_heads, attention_dim, idx_att_v_concat)
@@ -122,7 +126,7 @@ def transformer_layer(model, param, layer_idx, idx_input, weight_offset):
     idx_att_qkv_reshape = reshape2_node(param, "layer{}_att_qkv_reshape".format(layer_idx), -1, hidden_size, idx_att_qkv_matmul)
 
     #WO
-    idx_att_wo_weight, weight_offset = memorydata2_node(param, "layer{}_att_wo_weight".format(layer_idx), hidden_size, hidden_size, weight_offset, idx_att_qkv_reshape)
+    idx_att_wo_weight, weight_offset = memorydata2_node(param, "layer{}_att_wo_weight".format(layer_idx), hidden_size, hidden_size, 0, weight_offset, idx_att_qkv_reshape)
     idx_att_wo_matmul = matmul_node(param, "layer{}_att_wo_matmul".format(layer_idx), idx_att_qkv_reshape, idx_att_wo_weight)
     idx_att_shortcut = binary2_node(param, "layer{}_att_shortcut".format(layer_idx), "Add", idx_input, idx_att_wo_matmul)
 
@@ -136,13 +140,13 @@ def transformer_layer(model, param, layer_idx, idx_input, weight_offset):
     idx_ffnnorm_mul2 = binary2_node(param, "layer{}_ffnnorm_mul2".format(layer_idx), "Mul", idx_ffnnorm_mul1, idx_ffnnorm_weight)
 
     #FFN
-    idx_ffn_w1_weight, weight_offset = memorydata2_node(param, "layer{}_ffn_w1_weight".format(layer_idx), intermediate_size, hidden_size, weight_offset, idx_ffnnorm_mul2)
+    idx_ffn_w1_weight, weight_offset = memorydata2_node(param, "layer{}_ffn_w1_weight".format(layer_idx), intermediate_size, hidden_size, 0, weight_offset, idx_ffnnorm_mul2)
     idx_ffn_w1_matmul = matmul_node(param, "layer{}_ffn_w1_matmul".format(layer_idx), idx_ffnnorm_mul2, idx_ffn_w1_weight)
     idx_ffn_w1_swish = swish_node(param, "layer{}_ffn_w1_swish".format(layer_idx), idx_ffn_w1_matmul)
-    idx_ffn_w3_weight, weight_offset = memorydata2_node(param, "layer{}_ffn_w3_weight".format(layer_idx), intermediate_size, hidden_size, weight_offset, idx_ffn_w1_swish)
+    idx_ffn_w3_weight, weight_offset = memorydata2_node(param, "layer{}_ffn_w3_weight".format(layer_idx), intermediate_size, hidden_size, 0, weight_offset, idx_ffn_w1_swish)
     idx_ffn_w3_matmul = matmul_node(param, "layer{}_ffn_w3_matmul".format(layer_idx), idx_ffnnorm_mul2, idx_ffn_w3_weight)
     idx_ffn_mul = binary2_node(param, "layer{}_ffn_mul".format(layer_idx), "Mul", idx_ffn_w1_swish, idx_ffn_w3_matmul)
-    idx_ffn_w2_weight, weight_offset = memorydata2_node(param, "layer{}_ffn_w2_weight".format(layer_idx), hidden_size, intermediate_size, weight_offset, idx_ffn_mul)
+    idx_ffn_w2_weight, weight_offset = memorydata2_node(param, "layer{}_ffn_w2_weight".format(layer_idx), hidden_size, intermediate_size, 0, weight_offset, idx_ffn_mul)
     idx_ffn_w2_matmul = matmul_node(param, "layer{}_ffn_w2_matmul".format(layer_idx), idx_ffn_mul, idx_ffn_w2_weight)
     idx_ffn_shortcut = binary2_node(param, "layer{}_ffn_shortcut".format(layer_idx), "Add", idx_att_shortcut, idx_ffn_w2_matmul)
 
@@ -197,7 +201,7 @@ def model_param(model, param):
     idx_output_norm, weight_offset = output_norm(model, param, idx, weight_offset)
 
     #输出embedding
-    idx_output_embed_weight, weight_offset = memorydata2_node(param, "output_embed_weight", vocab_size, hidden_size, weight_offset, idx_output_norm)
+    idx_output_embed_weight, weight_offset = memorydata2_node(param, "output_embed_weight", vocab_size, hidden_size, 0, weight_offset, idx_output_norm)
     matmul_node(param, "output_matmul", idx_output_norm, idx_output_embed_weight)
 
     kvcache_step = kv_cache_out[1][0] - kv_cache_out[0][0]
@@ -280,8 +284,11 @@ def export_model():
     for i in range(model.config.num_hidden_layers):
         serialize_fp32(bin_file, model_attention.layers[i].input_layernorm.weight)
         serialize_fp32(bin_file, model_attention.layers[i].self_attn.q_proj.weight)
+        serialize_fp32(bin_file, model_attention.layers[i].self_attn.q_proj.bias)
         serialize_fp32(bin_file, model_attention.layers[i].self_attn.k_proj.weight)
+        serialize_fp32(bin_file, model_attention.layers[i].self_attn.k_proj.bias)
         serialize_fp32(bin_file, model_attention.layers[i].self_attn.v_proj.weight)
+        serialize_fp32(bin_file, model_attention.layers[i].self_attn.v_proj.bias)
         serialize_fp32(bin_file, model_attention.layers[i].self_attn.o_proj.weight)
         serialize_fp32(bin_file, model_attention.layers[i].post_attention_layernorm.weight)
         serialize_fp32(bin_file, model_attention.layers[i].mlp.gate_proj.weight)

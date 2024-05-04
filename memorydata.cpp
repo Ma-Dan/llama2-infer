@@ -24,6 +24,10 @@ int MemoryData::load_model(const vector<string> &params, FILE* fp)
         shape.push_back(atoi(dim_size_param[1].c_str()));
     }
 
+    vector<string> bias_param = split(params[8+shape_dim], "=");
+    int bias = atoi(bias_param[1].c_str());
+    _weight->set_bias(bias);
+
     _weight->set_shape(shape);
 
     vector<string> weight_offset_param = split(params[6+shape_dim], "=");

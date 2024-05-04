@@ -40,21 +40,23 @@ void Softmax::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(inputShape);
         vector<float>* outputData = result->get_data();
 
+        vector<double> calcData(outputData->size(), 0);
+
         for(int i=0; i<outputData->size(); i++)
         {
-            outputData->data()[i] = expf(inputData->data()[i]);
+            calcData.data()[i] = exp2l(inputData->data()[i]);
         }
 
         for(int i=0; i<inputShape[1]; i++)
         {
-            float sum = 0.0f;
+            double sum = 0.0f;
             for(int j=0; j<inputShape[0]; j++)
             {
-                sum += outputData->data()[j*inputShape[1]+i];
+                sum += calcData.data()[j*inputShape[1]+i];
             }
             for(int j=0; j<inputShape[0]; j++)
             {
-                outputData->data()[j*inputShape[1]+i] /= sum;
+                outputData->data()[j*inputShape[1]+i] = calcData.data()[j*inputShape[1]+i] /= sum;
             }
         }
 

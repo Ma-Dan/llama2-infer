@@ -16,7 +16,7 @@
 #include "utils.h"
 #include "cuda_function.h"
 
-const int vocab_size = 32000;
+const int vocab_size = 151936;
 
 float temp = 1, topp = 0.9;
 const int topk = 300;
@@ -248,7 +248,7 @@ int main(int argc, char** argv) {
 
     for (int i = 0; i < ctx_length; i++) {
         for (int j = 0; j < head_dim / 2; j++) {
-            auto x = i / pow(10000.0, j * 2 / (double)head_dim);
+            auto x = i / pow(1000000.0, j * 2 / (double)head_dim);
             freqs_cos_table[i * head_dim / 2 + j] = cos(x);
             freqs_sin_table[i * head_dim / 2 + j] = sin(x);
         }
@@ -268,8 +268,9 @@ int main(int argc, char** argv) {
     bpe tokenizer;
     tokenizer.load(tokenizer_path);
 
-    auto tokens = tokenizer.encode(prompt);
-    tokens.insert(tokens.begin(), 1);  // bos
+    //auto tokens = tokenizer.encode(prompt);
+    vector<int> tokens = {151644, 8948, 198, 2610, 525, 264, 10950, 17847, 13, 151645, 198, 151644, 872, 198, 109432, 99283, 151645, 198, 151644, 77091, 198};
+    //tokens.insert(tokens.begin(), 1);  // bos
     int prompt_end = tokens.size();
     tokens.resize(token_count);
 

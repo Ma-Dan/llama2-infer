@@ -5,6 +5,7 @@
 Tensor::Tensor()
 {
     _device_type = Tensor_CPU;
+    _has_bias = 0;
 }
 
 Tensor::~Tensor()
@@ -25,6 +26,11 @@ void Tensor::set_device_type(int device_type)
 float* Tensor::get_device_data()
 {
     return _device_data;
+}
+
+float* Tensor::get_device_bias()
+{
+    return _device_bias;
 }
 
 int Tensor::set_shape(const vector<int> shape)
@@ -60,9 +66,19 @@ int Tensor::set_shape(const vector<int> shape)
     if(newSize != oldSize)
     {
         _data.resize(newSize);
+        if(_has_bias)
+        {
+            _bias.resize(shape[0]);
+        }
     }
 
     return 0;
+}
+
+int Tensor::set_bias(int bias)
+{
+    _has_bias = bias;
+    return 1;
 }
 
 void Tensor::set_data(const vector<float> data)
@@ -76,9 +92,19 @@ vector<float>* Tensor::get_data()
     return &_data;
 }
 
+vector<float>* Tensor::get_bias()
+{
+    return &_bias;
+}
+
 vector<int> Tensor::get_shape()
 {
     return _shape;
+}
+
+int Tensor::has_bias()
+{
+    return _has_bias;
 }
 
 int Tensor::get_size()
@@ -96,11 +122,20 @@ int Tensor::load_data(FILE *fp, long offset)
 {
     fseek(fp, offset, SEEK_SET);
     fread(_data.data(), _data.size(), sizeof(float), fp);
+    if(_has_bias)
+    {
+        fread(_bias.data(), _bias.size(), sizeof(float), fp);
+    }
 
     if(_device_type == Tensor_GPU)
     {
         mallocGPUData(&_device_data, _data.size()*sizeof(float));
         uploadGPUData(_device_data, (void*)_data.data(), _data.size()*sizeof(float));
+        if(_has_bias)
+        {
+            mallocGPUData(&_device_bias, _bias.size()*sizeof(float));
+            uploadGPUData(_device_bias, (void*)_bias.data(), _bias.size()*sizeof(float));
+        }
     }
 
     return 0;
@@ -110,9 +145,14 @@ void Tensor::clear()
 {
     _shape.clear();
     _data.clear();
+    _bias.clear();
 
     if(_device_type == Tensor_GPU)
     {
         freeGPUData(_device_data);
+        if(_has_bias)
+        {
+            freeGPUData(_device_bias);
+        }
     }
 }
