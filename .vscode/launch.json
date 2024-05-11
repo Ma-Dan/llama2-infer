@@ -19,7 +19,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/inference",
-            "args": ["qwen_chat", "<|im_start|>system You are a helpful assistant.<|im_end|> <|im_start|>user 你好<|im_end|> <|im_start|>assistant ", "256", "0.85"],
+            "args": ["qwen_chat", "介绍一下自己", "256", "0.85"],
             //"args": ["stories42M", "", "256", "0"],
             //"environment": [{"name": "LD_LIBRARY_PATH", "value": ""}],
             "cwd": "${workspaceFolder}",
