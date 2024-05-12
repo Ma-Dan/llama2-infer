@@ -54,11 +54,10 @@ void Posenc::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         }
         for(int j=0; j<outputShape[1]; j++)
         {
-            for(int k=0; k<outputShape[2]/2; k++)
+            int dataOffset = (i*outputShape[1] + j)*outputShape[2];
+            for(int k=0; k<outputShape[2]; k++)
             {
-                int dataOffset = (i*outputShape[1] + j)*outputShape[2];
-                outputData->data()[dataOffset+k*2] = inputData->data()[dataOffset+k*2] * freqs_cos->data()[freqOffset+k] - inputData->data()[dataOffset+k*2+1] * freqs_sin->data()[freqOffset+k];
-                outputData->data()[dataOffset+k*2+1] = inputData->data()[dataOffset+k*2] * freqs_sin->data()[freqOffset+k] + inputData->data()[dataOffset+k*2+1] * freqs_cos->data()[freqOffset+k];
+                outputData->data()[dataOffset+k] = inputData->data()[dataOffset+k] * freqs_cos->data()[freqOffset+k%(outputShape[2]/2)] - inputData->data()[dataOffset+(k+outputShape[2]/2)%outputShape[2]] * freqs_sin->data()[freqOffset+k%(outputShape[2]/2)];
             }
         }
     }

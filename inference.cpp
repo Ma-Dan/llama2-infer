@@ -261,6 +261,9 @@ int main(int argc, char** argv) {
     inputData.push_back(0);
 
     prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n";
+    auto tokens = tokenizer->encode(prompt, 4096);
+    int prompt_end = tokens.size();
+    tokens.resize(4096);
 
     std::chrono::steady_clock clk;
     auto t0 = clk.now();
@@ -272,27 +275,20 @@ int main(int argc, char** argv) {
       string user_input;
       getline(cin, user_input);
 
-      prompt += "<|im_start|>user\n" + user_input + "<|im_end|>\n<|im_start|>assistant\n";
+      string format_input = "<|im_start|>user\n" + user_input + "<|im_end|>\n<|im_start|>assistant\n";
 
-      // tokenize prompt
-      auto tokens = tokenizer->encode(prompt, 4096);
-      int prompt_end = tokens.size();
-      tokens.resize(token_count);
+      // tokenize input
+      auto tokens_input = tokenizer->encode(format_input, 4096);
+      for(int i=0; i<tokens_input.size(); i++) {
+        tokens[prompt_end] = tokens_input[i];
+        prompt_end++;
+      }
 
       std::cout << "AI: " << std::flush;
+      int output_length = 0;
 
       // feed forward
       for (; pos < token_count; pos++) {
-        if(pos >= prompt_end - 1) {
-          string output = tokenizer->decode({tokens[pos]});
-          prompt += output;
-          std::cout << output << std::flush;
-          if((151643 == tokens[pos]) || (151645 == tokens[pos])) {
-            std::cout << std::endl;
-            break;
-          }
-        }
-
         inputData[0] = (float)tokens[pos];
         inputTensor.set_data(inputData);
 
@@ -339,7 +335,15 @@ int main(int argc, char** argv) {
         }
 
         if (pos < prompt_end - 1) continue;
-        tokens[pos + 1] = sample(*output->get_data(), temp, topp, topk);
+        tokens[pos+1] = sample(*output->get_data(), temp, topp, topk);
+        output_length++;
+        std::cout << tokenizer->decode({tokens[pos+1]}) << std::flush;
+        if((151643 == tokens[pos+1]) || (151645 == tokens[pos+1])) {
+          std::cout << std::endl;
+          prompt_end += output_length;
+          pos++;
+          break;
+        }
         if (pos == 0) t0 = clk.now();
       }
     }
