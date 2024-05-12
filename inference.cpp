@@ -246,13 +246,8 @@ int main(int argc, char** argv) {
         vcache[i]->set_shape(kvcache_init_shape);
     }
 
-    // load tokenizer
+    // 加载tokenizer
     auto tokenizer = std::make_unique<QwenTokenizer>(tokenizer_path);
-    // tokenize prompt
-    prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n" + prompt + "<|im_end|>\n<|im_start|>assistant\n";
-    auto tokens = tokenizer->encode(prompt, 4096);
-    int prompt_end = tokens.size();
-    tokens.resize(token_count);
 
     // 加载模型
     Graph* graph = new Graph();
@@ -265,12 +260,38 @@ int main(int argc, char** argv) {
     vector<float> inputData;
     inputData.push_back(0);
 
+    prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n";
+
     std::chrono::steady_clock clk;
     auto t0 = clk.now();
 
-    // feed forward
-    for (int pos = 0; pos < token_count; pos++) {
-        std::cout << tokenizer->decode({tokens[pos]}) << std::flush;
+    int pos = 0;
+
+    while(1) {
+      std::cout << "User: " << std::flush;
+      string user_input;
+      getline(cin, user_input);
+
+      prompt += "<|im_start|>user\n" + user_input + "<|im_end|>\n<|im_start|>assistant\n";
+
+      // tokenize prompt
+      auto tokens = tokenizer->encode(prompt, 4096);
+      int prompt_end = tokens.size();
+      tokens.resize(token_count);
+
+      std::cout << "AI: " << std::flush;
+
+      // feed forward
+      for (; pos < token_count; pos++) {
+        if(pos >= prompt_end - 1) {
+          string output = tokenizer->decode({tokens[pos]});
+          prompt += output;
+          std::cout << output << std::flush;
+          if((151643 == tokens[pos]) || (151645 == tokens[pos])) {
+            std::cout << std::endl;
+            break;
+          }
+        }
 
         inputData[0] = (float)tokens[pos];
         inputTensor.set_data(inputData);
@@ -283,8 +304,8 @@ int main(int argc, char** argv) {
         freqs_cos.set_shape(posShape);
         freqs_sin.set_shape(posShape);
         for (int i = 0; i < (pos + 1) * head_dim / 2; i++) {
-            freqs_cos.get_data()->data()[i] = freqs_cos_table[i];
-            freqs_sin.get_data()->data()[i] = freqs_sin_table[i];
+          freqs_cos.get_data()->data()[i] = freqs_cos_table[i];
+          freqs_sin.get_data()->data()[i] = freqs_sin_table[i];
         }
 
         graph->input("in", &inputTensor);
@@ -293,11 +314,11 @@ int main(int argc, char** argv) {
 
         for(int i = 0; i < n_layers; i++)
         {
-            auto layer_name = std::to_string(i);
-            auto kc_name = "k_cache_" + layer_name;
-            auto vc_name = "v_cache_" + layer_name;
-            graph->input(kc_name.c_str(), kcache[i]);
-            graph->input(vc_name.c_str(), vcache[i]);
+          auto layer_name = std::to_string(i);
+          auto kc_name = "k_cache_" + layer_name;
+          auto vc_name = "v_cache_" + layer_name;
+          graph->input(kc_name.c_str(), kcache[i]);
+          graph->input(vc_name.c_str(), vcache[i]);
         }
 
         Tensor* output;
@@ -306,21 +327,23 @@ int main(int argc, char** argv) {
         //kvcache输出
         for(int i = 0; i < n_layers; i++)
         {
-            Tensor* kcache_out;
-            graph->get_result(std::to_string(kcache_start+i*kvcache_step), kcache_out);
-            kcache[i]->set_shape(kcache_out->get_shape());
-            kcache[i]->set_data(*kcache_out->get_data());
+          Tensor* kcache_out;
+          graph->get_result(std::to_string(kcache_start+i*kvcache_step), kcache_out);
+          kcache[i]->set_shape(kcache_out->get_shape());
+          kcache[i]->set_data(*kcache_out->get_data());
 
-            Tensor* vcache_out;
-            graph->get_result(std::to_string(vcache_start+i*kvcache_step), vcache_out);
-            vcache[i]->set_shape(vcache_out->get_shape());
-            vcache[i]->set_data(*vcache_out->get_data());
+          Tensor* vcache_out;
+          graph->get_result(std::to_string(vcache_start+i*kvcache_step), vcache_out);
+          vcache[i]->set_shape(vcache_out->get_shape());
+          vcache[i]->set_data(*vcache_out->get_data());
         }
 
         if (pos < prompt_end - 1) continue;
         tokens[pos + 1] = sample(*output->get_data(), temp, topp, topk);
         if (pos == 0) t0 = clk.now();
+      }
     }
+
     std::cout << std::endl;
 
     auto t1 = clk.now();
