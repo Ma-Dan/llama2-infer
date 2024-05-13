@@ -71,7 +71,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 
         if(_matmul_type == Matmul_CPU)
         {
-            #pragma omp parallel for private(i)
+            #pragma omp parallel for
             for(int i=0; i<input0Shape[0]; i++)
             {
                 for(int j=0; j<input1Shape[0]; j++)

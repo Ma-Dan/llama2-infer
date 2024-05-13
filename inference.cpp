@@ -270,6 +270,9 @@ int main(int argc, char** argv) {
 
     int pos = 0;
 
+    Tensor freqs_cos;
+    Tensor freqs_sin;
+
     while(1) {
       std::cout << "User: " << std::flush;
       string user_input;
@@ -292,17 +295,15 @@ int main(int argc, char** argv) {
         inputData[0] = (float)tokens[pos];
         inputTensor.set_data(inputData);
 
-        Tensor freqs_cos;
-        Tensor freqs_sin;
         vector<int> posShape;
         posShape.push_back(pos + 1);
         posShape.push_back(head_dim / 2);
         freqs_cos.set_shape(posShape);
         freqs_sin.set_shape(posShape);
-        for (int i = 0; i < (pos + 1) * head_dim / 2; i++) {
-          freqs_cos.get_data()->data()[i] = freqs_cos_table[i];
-          freqs_sin.get_data()->data()[i] = freqs_sin_table[i];
-        }
+
+        int pos_len = (pos + 1) * head_dim / 2;
+        memcpy(freqs_cos.get_data()->data(), freqs_cos_table.data(), pos_len*sizeof(float));
+        memcpy(freqs_sin.get_data()->data(), freqs_sin_table.data(), pos_len*sizeof(float));
 
         graph->input("in", &inputTensor);
         graph->input("freqs_cos", &freqs_cos);
@@ -321,6 +322,7 @@ int main(int argc, char** argv) {
         graph->extract("output", output);
 
         //kvcache输出
+        #pragma omp parallel for
         for(int i = 0; i < n_layers; i++)
         {
           Tensor* kcache_out;

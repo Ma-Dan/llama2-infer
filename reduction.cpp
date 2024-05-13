@@ -61,6 +61,7 @@ void Reduction::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 
         result->set_shape(outputShape);
 
+        #pragma omp parallel for
         for(int i=0; i<blocks; i++)
         {
             float sum = 0.0f;

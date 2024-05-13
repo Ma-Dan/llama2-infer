@@ -52,6 +52,7 @@ void Posenc::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         {
             freqOffset = i*input[1]->get_shape()[1];
         }
+        #pragma omp parallel for
         for(int j=0; j<outputShape[1]; j++)
         {
             int dataOffset = (i*outputShape[1] + j)*outputShape[2];

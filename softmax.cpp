@@ -43,6 +43,7 @@ void Softmax::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         vector<float> m(inputShape[0]+1);
         vector<float> d(inputShape[0]+1);
 
+        #pragma omp parallel for
         for(int i=0; i<inputShape[1]; i++)
         {
             m[0] = -1e10;
