@@ -9,7 +9,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "export_model.py",
-            "args": ["/root/autodl-tmp/Qwen1.5-0.5B-Chat", "qwen_chat"],
+            "args": ["/root/autodl-tmp/Qwen1.5-1.8B-Chat", "qwen_chat_18b"],
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {}
@@ -19,7 +19,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/inference",
-            "args": ["qwen_chat", "介绍一下自己", "256", "0.85"],
+            "args": ["qwen_chat", "", "4096", "0.85"],
             //"args": ["stories42M", "", "256", "0"],
             //"environment": [{"name": "LD_LIBRARY_PATH", "value": ""}],
             "cwd": "${workspaceFolder}",
