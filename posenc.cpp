@@ -2,6 +2,7 @@
 #include "layer_register.h"
 #include "utils.h"
 #include "math.h"
+#include "omp.h"
 
 Posenc::Posenc()
 {
@@ -41,6 +42,8 @@ void Posenc::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     vector<float>* freqs_cos = input[1]->get_data();
     vector<float>* freqs_sin = input[2]->get_data();
 
+    omp_set_max_active_levels(3);
+    #pragma omp parallel for
     for(int i=0; i<outputShape[0]; i++)
     {
         int freqOffset;
@@ -52,7 +55,7 @@ void Posenc::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         {
             freqOffset = i*input[1]->get_shape()[1];
         }
-        #pragma omp parallel for
+
         for(int j=0; j<outputShape[1]; j++)
         {
             int dataOffset = (i*outputShape[1] + j)*outputShape[2];

@@ -29,8 +29,8 @@ add_subdirectory(third_party/re2)
 set(MAIN_FILE inference.cpp)
 set(EXECUTABLE_OUTPUT_PATH ../)
 
-add_compile_options(-g -Ofast)
+add_compile_options(-Ofast -fopenmp)
 
 cuda_add_executable(inference inference.cpp utils.cpp tensor.cpp node.cpp layer.cpp layer_register.cpp graph.cpp input.cpp embed.cpp unaryop.cpp binaryop.cpp reduction.cpp memorydata.cpp matmul.cpp reshape.cpp posenc.cpp concat.cpp softmax.cpp swish.cpp cuda_function.cu)
 target_link_directories(inference PUBLIC /usr/local/cuda/lib64 /opt/cuda/lib64 $(CUDA_PATH)/targets/x86_64-linux/lib)
-target_link_libraries(inference cublas culibos cudart cublasLt re2::re2)
+target_link_libraries(inference cublas culibos cudart cublasLt omp5 re2::re2)

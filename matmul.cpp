@@ -2,6 +2,7 @@
 #include "layer_register.h"
 #include "utils.h"
 #include "cuda_function.h"
+#include "omp.h"
 
 Matmul::Matmul()
 {
@@ -144,6 +145,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
+        omp_set_max_active_levels(3);
         #pragma omp parallel for
         for(int i=0; i<input0Shape[1]; i++)
         {

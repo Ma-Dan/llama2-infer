@@ -21,7 +21,7 @@
             "program": "${workspaceFolder}/inference",
             "args": ["qwen_chat", "", "4096", "0.85"],
             //"args": ["stories42M", "", "256", "0"],
-            //"environment": [{"name": "LD_LIBRARY_PATH", "value": ""}],
+            "environment": [{"name": "OMP_NUM_THREADS", "value": "8"}],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             "externalConsole": false,
