@@ -120,6 +120,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
+        omp_set_max_active_levels(3);
         #pragma omp parallel for
         for(int i=0; i<input0Shape[0]; i++)
         {
@@ -145,7 +146,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
-        omp_set_max_active_levels(3);
+        omp_set_max_active_levels(4);
         #pragma omp parallel for
         for(int i=0; i<input0Shape[1]; i++)
         {
