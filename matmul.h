@@ -26,6 +26,10 @@ class Matmul: public Layer
         int _matmul_type;
         float* _input_data;
         float* _output_data;
+
+        float* _input_softmax;
+        float* _input_v;
+        float* _output_attention;
 };
 
 #endif
