@@ -1,7 +1,6 @@
 #include "matmul.h"
 #include "layer_register.h"
 #include "utils.h"
-#include "cuda_function.h"
 #include "omp.h"
 
 Matmul::Matmul()
@@ -17,15 +16,6 @@ Matmul::Matmul()
 
 Matmul::~Matmul()
 {
-    if(_matmul_type == Matmul_GPU)
-    {
-        freeGPUData(_input_data);
-        freeGPUData(_output_data);
-
-        freeGPUData(_input_softmax);
-        freeGPUData(_input_v);
-        freeGPUData(_output_attention);
-    }
 }
 
 int Matmul::load_model(const vector<string> &params, FILE* fp)
@@ -49,20 +39,6 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     vector<float>* input1Data = input[1]->get_data();
     vector<int> input0Shape = input[0]->get_shape();
     vector<int> input1Shape = input[1]->get_shape();
-
-    if(input[1]->get_device_type() == Tensor_GPU)
-    {
-        _matmul_type = Matmul_GPU;
-        if(_input_data == NULL)
-        {
-            mallocGPUData(&_input_data, input[0]->get_size()*sizeof(float));
-        }
-
-        if(_output_data == NULL)
-        {
-            mallocGPUData(&_output_data, input0Shape[0]*input1Shape[0]*sizeof(float));
-        }
-    }
 
     if(input0Shape.size() == 2 && input1Shape.size() == 2)
     {
@@ -99,17 +75,6 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     }
                     outputData->data()[i*input1Shape[0]+j] = sum;
                 }
-            }
-        }
-        else
-        {
-            if(input[1]->has_bias())
-            {
-                matmul_cublas(outputData->data(), input0Data->data(), input[1]->get_device_data(), input[1]->get_bias()->data(), _input_data, _output_data, input0Shape[1], input1Shape[0]);
-            }
-            else
-            {
-                matmul_cublas(outputData->data(), input0Data->data(), input[1]->get_device_data(), NULL, _input_data, _output_data, input0Shape[1], input1Shape[0]);
             }
         }
     }
@@ -157,38 +122,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
-        if(0)//_matmul_type == Matmul_GPU)
-        {
-            if(NULL == _input_softmax)
-            {
-                mallocGPUData(&_input_softmax, 4096*input0Shape[1]*sizeof(float));
-                mallocGPUData(&_input_v, input0Shape[1]*input0Shape[2]*4096*sizeof(float));
-                mallocGPUData(&_output_attention, input0Shape[1]*input0Shape[2]*sizeof(float));
-            }
-
-            omp_set_max_active_levels(3);
-            //#pragma omp parallel for
-            for(int i=0; i<input0Shape[1]; i++)
-            {
-                vector<float> inputSoftmax(input0Shape[0], 0);
-                vector<float> inputV(input0Shape[2]*input0Shape[0], 0);
-                vector<float> outputAttention(input0Shape[2], 0);
-                //head循环
-                for(int j=0; j<input0Shape[2]; j++)
-                {
-                    //head_dim循环
-                    for(int k=0; k<input0Shape[0]; k++)
-                    {
-                        //pos循环
-                        inputV[j*input0Shape[0]+k] = input0Data->data()[k*input0Shape[1]*input0Shape[2]+i*input0Shape[2]+j];
-                        inputSoftmax[k] = input1Data->data()[k*input0Shape[1]+i];
-                    }
-                }
-                matmul_cublas_qkv(outputAttention.data(), inputV.data(), inputSoftmax.data(), &_input_v[i*input0Shape[2]*4096], &_input_softmax[i*4096], &_output_attention[i*input0Shape[2]], input0Shape[0], input0Shape[2]);
-                memcpy(&outputData->data()[i*input0Shape[2]], outputAttention.data(), input0Shape[2]*sizeof(float));
-            }
-        }
-        else
+        if(1)//_matmul_type == Matmul_GPU)
         {
             int i;
             #pragma omp parallel for private(i)
