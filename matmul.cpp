@@ -80,10 +80,13 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
 
         if(_matmul_type == Matmul_CPU)
         {
-            #pragma omp parallel for
-            for(int i=0; i<input0Shape[0]; i++)
+            int i;
+            #pragma omp parallel for private(i)
+            for(i=0; i<input0Shape[0]; i++)
             {
-                for(int j=0; j<input1Shape[0]; j++)
+                int j;
+                #pragma omp parallel for private(j)
+                for(j=0; j<input1Shape[0]; j++)
                 {
                     float sum = 0.0f;
                     if(input[1]->has_bias())
@@ -128,9 +131,9 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
-        omp_set_max_active_levels(3);
-        #pragma omp parallel for
-        for(int i=0; i<input0Shape[0]; i++)
+        int i;
+        #pragma omp parallel for private(i)
+        for(i=0; i<input0Shape[0]; i++)
         {
             for(int j=0; j<input0Shape[1]; j++)
             {
@@ -154,7 +157,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
-        if(1)//_matmul_type == Matmul_GPU)
+        if(0)//_matmul_type == Matmul_GPU)
         {
             if(NULL == _input_softmax)
             {
@@ -164,7 +167,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
             }
 
             omp_set_max_active_levels(3);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for(int i=0; i<input0Shape[1]; i++)
             {
                 vector<float> inputSoftmax(input0Shape[0], 0);
@@ -187,8 +190,8 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         }
         else
         {
-            omp_set_max_active_levels(4);
-            #pragma omp parallel for
+            int i;
+            #pragma omp parallel for private(i)
             for(int i=0; i<input0Shape[1]; i++)
             {
                 //head循环

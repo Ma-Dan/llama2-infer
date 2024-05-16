@@ -41,7 +41,7 @@ void Softmax::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         vector<float>* outputData = result->get_data();
 
         int i;
-        #pragma omp parallel for private(i)
+        //#pragma omp parallel for private(i)
         for(i=0; i<inputShape[1]; i++)
         {
             vector<float> m(inputShape[0]+1);

@@ -322,7 +322,6 @@ int main(int argc, char** argv) {
         graph->extract("output", output);
 
         //kvcache输出
-        #pragma omp parallel for
         for(int i = 0; i < n_layers; i++)
         {
           Tensor* kcache_out;
