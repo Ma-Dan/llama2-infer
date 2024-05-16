@@ -5,6 +5,8 @@
 Tensor::Tensor()
 {
     _device_type = Tensor_CPU;
+
+    _data = new vector<float>();
 }
 
 Tensor::~Tensor()
@@ -27,7 +29,7 @@ float* Tensor::get_device_data()
     return _device_data;
 }
 
-int Tensor::set_shape(const vector<int> shape)
+int Tensor::set_shape(const vector<int> &shape)
 {
     if(is_same_shape(shape, _shape))
     {
@@ -59,21 +61,32 @@ int Tensor::set_shape(const vector<int> shape)
 
     if(newSize != oldSize)
     {
-        _data.resize(newSize);
+        _data->resize(newSize);
     }
 
     return 0;
 }
 
-void Tensor::set_data(const vector<float> data)
+void Tensor::set_data(const vector<float> &data)
 {
-    _data.resize(data.size());
-    memcpy(_data.data(), data.data(), data.size()*sizeof(float));
+    _data->resize(data.size());
+    memcpy(_data->data(), data.data(), data.size()*sizeof(float));
+}
+
+void Tensor::set_shape_data(const vector<int> &shape, const vector<float> *data)
+{
+    _shape.clear();
+    for(int i=0; i<shape.size(); i++)
+    {
+        _shape.push_back(shape[i]);
+    }
+
+    _data = (vector<float>*)data;
 }
 
 vector<float>* Tensor::get_data()
 {
-    return &_data;
+    return _data;
 }
 
 vector<int> Tensor::get_shape()
@@ -95,12 +108,12 @@ int Tensor::get_size()
 int Tensor::load_data(FILE *fp, long offset)
 {
     fseek(fp, offset, SEEK_SET);
-    fread(_data.data(), _data.size(), sizeof(float), fp);
+    fread(_data->data(), _data->size(), sizeof(float), fp);
 
     if(_device_type == Tensor_GPU)
     {
-        mallocGPUData(&_device_data, _data.size()*sizeof(float));
-        uploadGPUData(_device_data, (void*)_data.data(), _data.size()*sizeof(float));
+        mallocGPUData(&_device_data, _data->size()*sizeof(float));
+        uploadGPUData(_device_data, (void*)_data->data(), _data->size()*sizeof(float));
     }
 
     return 0;
@@ -109,7 +122,9 @@ int Tensor::load_data(FILE *fp, long offset)
 void Tensor::clear()
 {
     _shape.clear();
-    _data.clear();
+    _data->clear();
+
+    delete _data;
 
     if(_device_type == Tensor_GPU)
     {

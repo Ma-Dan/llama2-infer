@@ -46,7 +46,7 @@ void freeGPUData(void *gpuData)
 }
 
 // Cublas
-void matmul_cublas(float* xout, float* x, float* w, float *d_B, float *d_C, int n, int d)
+void matmul_cublas(float* xout, float* x, float* w, float* bias, float *d_B, float *d_C, int n, int d)
 {
     dim3 dimsA(n, d, 1);
     dim3 dimsB(1, n, 1);
@@ -59,9 +59,16 @@ void matmul_cublas(float* xout, float* x, float* w, float *d_B, float *d_C, int 
     // copy host memory to device
     cudaMemcpyAsync(d_B, x, mem_size_B, cudaMemcpyHostToDevice);
 
+    float beta = 0.0f;
+
+    if(bias != NULL)
+    {
+        cudaMemcpyAsync(d_C, bias, mem_size_C, cudaMemcpyHostToDevice);
+        beta = 1.0f;
+    }
+
     // Calculate with Cublas
     const float alpha = 1.0f;
-    const float beta = 0.0f;
 
     cublasStatus_t status = cublasSgemm(
         handle, CUBLAS_OP_T, CUBLAS_OP_T, dimsA.y, dimsB.x,
@@ -70,4 +77,31 @@ void matmul_cublas(float* xout, float* x, float* w, float *d_B, float *d_C, int 
 
     // Copy result from device to host
     cudaMemcpyAsync(xout, d_C, mem_size_C, cudaMemcpyDeviceToHost);
+}
+
+void matmul_cublas_qkv(float* c, float* a, float* b, float *d_A, float *d_B, float *d_C, int n, int d)
+{
+    dim3 dimsA(n, d, 1);
+    dim3 dimsB(1, n, 1);
+    dim3 dimsC(dimsB.x, dimsA.y, 1);
+
+    int mem_size_A = n*d*sizeof(float);
+    int mem_size_B = n*sizeof(float);
+    int mem_size_C = d*sizeof(float);
+
+    // copy host memory to device
+    cudaMemcpyAsync(d_A, a, mem_size_A, cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(d_B, b, mem_size_B, cudaMemcpyHostToDevice);
+
+    // Calculate with Cublas
+    const float alpha = 1.0f;
+    const float beta = 0.0f;
+
+    cublasStatus_t status = cublasSgemm(
+        handle, CUBLAS_OP_T, CUBLAS_OP_T, dimsA.y, dimsB.x,
+        dimsA.x, &alpha, d_A, dimsA.x, d_B,
+        dimsB.x, &beta, d_C, dimsC.y);
+
+    // Copy result from device to host
+    cudaMemcpyAsync(c, d_C, mem_size_C, cudaMemcpyDeviceToHost);
 }
