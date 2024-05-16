@@ -42,8 +42,6 @@ void Posenc::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     vector<float>* freqs_cos = input[1]->get_data();
     vector<float>* freqs_sin = input[2]->get_data();
 
-    omp_set_max_active_levels(3);
-    #pragma omp parallel for
     for(int i=0; i<outputShape[0]; i++)
     {
         int freqOffset;

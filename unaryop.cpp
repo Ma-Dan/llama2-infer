@@ -49,7 +49,7 @@ void UnaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     {
         case 0:
             {
-                #pragma omp parallel for
+                //#pragma omp parallel for
                 for(int i=0; i<input[0]->get_data()->size(); i++)
                 {
                     data->data()[i] = input[0]->get_data()->data()[i] * input[0]->get_data()->data()[i];
@@ -58,7 +58,7 @@ void UnaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
             break;
         case 1:
             {
-                #pragma omp parallel for
+                //#pragma omp parallel for
                 for(int i=0; i<input[0]->get_data()->size(); i++)
                 {
                     data->data()[i] = 1.0f / powf(input[0]->get_data()->data()[i], 0.5f);

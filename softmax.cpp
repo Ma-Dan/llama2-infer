@@ -2,6 +2,7 @@
 #include "layer_register.h"
 #include "utils.h"
 #include <cmath>
+#include "omp.h"
 
 Softmax::Softmax()
 {
@@ -40,8 +41,9 @@ void Softmax::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(inputShape);
         vector<float>* outputData = result->get_data();
 
+        //omp_set_max_active_levels(2);
         int i;
-        #pragma omp parallel for private(i)
+        //#pragma omp parallel for private(i)
         for(i=0; i<inputShape[1]; i++)
         {
             vector<float> m(inputShape[0]+1);
