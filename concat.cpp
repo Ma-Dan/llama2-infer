@@ -65,19 +65,22 @@ void Concat::forward(vector<Tensor*> &input, vector<Tensor*> &output)
             outputShape.push_back(input0Shape[i]);
         }
     }
+
+    int offset = input0Data->size();
+
     result->set_shape(outputShape);
     vector<float>* outputData = result->get_data();
 
     //TODO:处理更多维度情况
     //本示例中只有0维度拼接，所以直接memcpy
-    if(input0Data->size() > 0)
+    /*if(input0Data->size() > 0)
     {
         memcpy(result->get_data()->data(), input0Data->data(), input0Data->size()*sizeof(float));
-    }
+    }*/
 
     if(input1Data->size() > 0)
     {
-        memcpy(&result->get_data()->data()[input0Data->size()], input1Data->data(), input1Data->size()*sizeof(float));
+        memcpy(&result->get_data()->data()[offset], input1Data->data(), input1Data->size()*sizeof(float));
     }
 
     output[0] = result;

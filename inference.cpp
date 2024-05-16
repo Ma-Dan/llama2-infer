@@ -327,13 +327,11 @@ int main(int argc, char** argv) {
         {
           Tensor* kcache_out;
           graph->get_result(std::to_string(kcache_start+i*kvcache_step), kcache_out);
-          kcache[i]->set_shape(kcache_out->get_shape());
-          kcache[i]->set_data(*kcache_out->get_data());
+          kcache[i] = kcache_out;
 
           Tensor* vcache_out;
           graph->get_result(std::to_string(vcache_start+i*kvcache_step), vcache_out);
-          vcache[i]->set_shape(vcache_out->get_shape());
-          vcache[i]->set_data(*vcache_out->get_data());
+          vcache[i] = vcache_out;
         }
 
         if (pos < prompt_end - 1) continue;
