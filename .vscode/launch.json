@@ -42,5 +42,15 @@
             "justMyCode": false,
             "env": {}
         },
+        {
+            "name": "chat",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "chat.py",
+            "args": [],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {}
+        },
     ]
 }

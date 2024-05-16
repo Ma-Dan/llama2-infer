@@ -6,6 +6,9 @@ Tensor::Tensor()
 {
     _device_type = Tensor_CPU;
     _has_bias = 0;
+
+    _data = new vector<float>();
+    _bias = new vector<float>();
 }
 
 Tensor::~Tensor()
@@ -65,10 +68,10 @@ int Tensor::set_shape(const vector<int> &shape)
 
     if(newSize != oldSize)
     {
-        _data.resize(newSize);
+        _data->resize(newSize);
         if(_has_bias)
         {
-            _bias.resize(shape[0]);
+            _bias->resize(shape[0]);
         }
     }
 
@@ -83,18 +86,29 @@ int Tensor::set_bias(int bias)
 
 void Tensor::set_data(const vector<float> &data)
 {
-    _data.resize(data.size());
-    memcpy(_data.data(), data.data(), data.size()*sizeof(float));
+    _data->resize(data.size());
+    memcpy(_data->data(), data.data(), data.size()*sizeof(float));
+}
+
+void Tensor::set_shape_data(const vector<int> &shape, const vector<float> *data)
+{
+    _shape.clear();
+    for(int i=0; i<shape.size(); i++)
+    {
+        _shape.push_back(shape[i]);
+    }
+
+    _data = (vector<float>*)data;
 }
 
 vector<float>* Tensor::get_data()
 {
-    return &_data;
+    return _data;
 }
 
 vector<float>* Tensor::get_bias()
 {
-    return &_bias;
+    return _bias;
 }
 
 vector<int> Tensor::get_shape()
@@ -121,20 +135,20 @@ int Tensor::get_size()
 int Tensor::load_data(FILE *fp, long offset)
 {
     fseek(fp, offset, SEEK_SET);
-    fread(_data.data(), _data.size(), sizeof(float), fp);
+    fread(_data->data(), _data->size(), sizeof(float), fp);
     if(_has_bias)
     {
-        fread(_bias.data(), _bias.size(), sizeof(float), fp);
+        fread(_bias->data(), _bias->size(), sizeof(float), fp);
     }
 
     if(_device_type == Tensor_GPU)
     {
-        mallocGPUData(&_device_data, _data.size()*sizeof(float));
-        uploadGPUData(_device_data, (void*)_data.data(), _data.size()*sizeof(float));
+        mallocGPUData(&_device_data, _data->size()*sizeof(float));
+        uploadGPUData(_device_data, (void*)_data->data(), _data->size()*sizeof(float));
         if(_has_bias)
         {
-            mallocGPUData(&_device_bias, _bias.size()*sizeof(float));
-            uploadGPUData(_device_bias, (void*)_bias.data(), _bias.size()*sizeof(float));
+            mallocGPUData(&_device_bias, _bias->size()*sizeof(float));
+            uploadGPUData(_device_bias, (void*)_bias->data(), _bias->size()*sizeof(float));
         }
     }
 
@@ -144,8 +158,11 @@ int Tensor::load_data(FILE *fp, long offset)
 void Tensor::clear()
 {
     _shape.clear();
-    _data.clear();
-    _bias.clear();
+    _data->clear();
+    _bias->clear();
+
+    delete _data;
+    delete _bias;
 
     if(_device_type == Tensor_GPU)
     {

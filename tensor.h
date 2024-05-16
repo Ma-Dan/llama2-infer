@@ -23,6 +23,7 @@ class Tensor
         int set_bias(int bias);
         int load_data(FILE *fp, long offset);
         void set_data(const vector<float> &data);
+        void set_shape_data(const vector<int> &shape, const vector<float> *data);
         vector<float>* get_data();
         vector<float>* get_bias();
         vector<int> get_shape();
@@ -36,8 +37,8 @@ class Tensor
 
     private:
         vector<int> _shape;
-        vector<float> _data;
-        vector<float> _bias;
+        vector<float> *_data;
+        vector<float> *_bias;
 
         int _has_bias;
 

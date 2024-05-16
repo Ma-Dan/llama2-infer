@@ -52,8 +52,9 @@ void Reshape::forward(vector<Tensor*> &input, vector<Tensor*> &output)
             outputShape.push_back(_dims[i]);
         }
     }
-    result->set_shape(outputShape);
-    memcpy(result->get_data()->data(), input[0]->get_data()->data(), input[0]->get_data()->size()*sizeof(float));
+    //result->set_shape(outputShape);
+    //memcpy(result->get_data()->data(), input[0]->get_data()->data(), input[0]->get_data()->size()*sizeof(float));
+    result->set_shape_data(outputShape, input[0]->get_data());
 
     output[0] = result;
 }
