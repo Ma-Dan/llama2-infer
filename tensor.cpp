@@ -1,6 +1,5 @@
 #include "tensor.h"
 #include "utils.h"
-#include "cuda_function.h"
 
 Tensor::Tensor()
 {
@@ -141,17 +140,6 @@ int Tensor::load_data(FILE *fp, long offset)
         fread(_bias->data(), _bias->size(), sizeof(float), fp);
     }
 
-    if(_device_type == Tensor_GPU)
-    {
-        mallocGPUData(&_device_data, _data->size()*sizeof(float));
-        uploadGPUData(_device_data, (void*)_data->data(), _data->size()*sizeof(float));
-        if(_has_bias)
-        {
-            mallocGPUData(&_device_bias, _bias->size()*sizeof(float));
-            uploadGPUData(_device_bias, (void*)_bias->data(), _bias->size()*sizeof(float));
-        }
-    }
-
     return 0;
 }
 
@@ -163,13 +151,4 @@ void Tensor::clear()
 
     delete _data;
     delete _bias;
-
-    if(_device_type == Tensor_GPU)
-    {
-        freeGPUData(_device_data);
-        if(_has_bias)
-        {
-            freeGPUData(_device_bias);
-        }
-    }
 }
