@@ -33,7 +33,7 @@ float* Tensor::get_device_bias()
     return _device_bias;
 }
 
-int Tensor::set_shape(const vector<int> shape)
+int Tensor::set_shape(const vector<int> &shape)
 {
     if(is_same_shape(shape, _shape))
     {
@@ -81,7 +81,7 @@ int Tensor::set_bias(int bias)
     return 1;
 }
 
-void Tensor::set_data(const vector<float> data)
+void Tensor::set_data(const vector<float> &data)
 {
     _data.resize(data.size());
     memcpy(_data.data(), data.data(), data.size()*sizeof(float));
