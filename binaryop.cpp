@@ -72,6 +72,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         {
             case 0:
                 {
+                    //#pragma omp parallel for
                     for(int i=0; i<outputData->size(); i++)
                     {
                         outputData->data()[i] = inputData->data()[i] + _param;
@@ -80,6 +81,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                 break;
             case 1:
                 {
+                    //#pragma omp parallel for
                     for(int i=0; i<outputData->size(); i++)
                     {
                         outputData->data()[i] = inputData->data()[i] - _param;
@@ -88,6 +90,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                 break;
             case 2:
                 {
+                    //#pragma omp parallel for
                     for(int i=0; i<outputData->size(); i++)
                     {
                         outputData->data()[i] = inputData->data()[i] * _param;
@@ -96,6 +99,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                 break;
             case 3:
                 {
+                    //#pragma omp parallel for
                     for(int i=0; i<outputData->size(); i++)
                     {
                         outputData->data()[i] = inputData->data()[i] / _param;
@@ -146,6 +150,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     {
                         if(situation == 0)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -156,6 +161,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                         }
                         else if(situation == 1)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -170,6 +176,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     {
                         if(situation == 0)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -180,6 +187,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                         }
                         else if(situation == 1)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -194,6 +202,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     {
                         if(situation == 0)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -204,6 +213,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                         }
                         else if(situation == 1)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -218,6 +228,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     {
                         if(situation == 0)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -228,6 +239,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                         }
                         else if(situation == 1)
                         {
+                            //#pragma omp parallel for
                             for(int i=0; i<input0Shape[0]; i++)
                             {
                                 for(int j=0; j<input0Shape[1]; j++)
@@ -256,6 +268,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
             {
                 case 0:
                     {
+                        //#pragma omp parallel for
                         for(int i=0; i<outputData->size(); i++)
                         {
                             outputData->data()[i] = input0Data->data()[i] + input1Data->data()[i];
@@ -264,6 +277,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     break;
                 case 1:
                     {
+                        //#pragma omp parallel for
                         for(int i=0; i<outputData->size(); i++)
                         {
                             outputData->data()[i] = input0Data->data()[i] - input1Data->data()[i];
@@ -272,6 +286,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     break;
                 case 2:
                     {
+                        //#pragma omp parallel for
                         for(int i=0; i<outputData->size(); i++)
                         {
                             outputData->data()[i] = input0Data->data()[i] * input1Data->data()[i];
@@ -280,6 +295,7 @@ void BinaryOp::forward(vector<Tensor*> &input, vector<Tensor*> &output)
                     break;
                 case 3:
                     {
+                        //#pragma omp parallel for
                         for(int i=0; i<outputData->size(); i++)
                         {
                             outputData->data()[i] = input0Data->data()[i] / input1Data->data()[i];

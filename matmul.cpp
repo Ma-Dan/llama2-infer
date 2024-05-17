@@ -1,9 +1,17 @@
 #include "matmul.h"
 #include "layer_register.h"
 #include "utils.h"
+#include "omp.h"
 
 Matmul::Matmul()
 {
+    _matmul_type = Matmul_CPU;
+    _input_data = NULL;
+    _output_data = NULL;
+
+    _input_softmax = NULL;
+    _input_v = NULL;
+    _output_attention = NULL;
 }
 
 Matmul::~Matmul()
@@ -46,17 +54,24 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
-        #pragma omp parallel for private(i)
-        for(int i=0; i<input0Shape[0]; i++)
+        if(_matmul_type == Matmul_CPU)
         {
-            for(int j=0; j<input1Shape[0]; j++)
+            int i;
+            #pragma omp parallel for private(i)
+            for(i=0; i<input0Shape[0]; i++)
             {
-                float sum = 0.0f;
-                for(int k=0; k<input0Shape[1]; k++)
+                int j;
+                #pragma omp parallel for private(j)
+                for(j=0; j<input1Shape[0]; j++)
                 {
-                    sum += input0Data->data()[i*input0Shape[1]+k] * input1Data->data()[j*input1Shape[1]+k];
+                    float sum = 0.0f;
+                    //#pragma omp parallel for reduction( +:sum)
+                    for(int k=0; k<input0Shape[1]; k++)
+                    {
+                        sum += input0Data->data()[i*input0Shape[1]+k] * input1Data->data()[j*input1Shape[1]+k];
+                    }
+                    outputData->data()[i*input1Shape[0]+j] = sum;
                 }
-                outputData->data()[i*input1Shape[0]+j] = sum;
             }
         }
     }
@@ -78,6 +93,7 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
+        int i;
         #pragma omp parallel for private(i)
         for(int i=0; i<input0Shape[0]; i++)
         {
@@ -103,20 +119,25 @@ void Matmul::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         result->set_shape(outputShape);
         vector<float>* outputData = result->get_data();
 
-        #pragma omp parallel for private(i)
-        for(int i=0; i<input0Shape[1]; i++)
+        if(1)//_matmul_type == Matmul_GPU)
         {
-            //head循环
-            for(int j=0; j<input0Shape[2]; j++)
+            int i;
+            #pragma omp parallel for private(i)
+            for(i=0; i<input0Shape[1]; i++)
             {
-                //head_dim循环
-                float sum = 0.0f;
-                for(int k=0; k<input0Shape[0]; k++)
+                //head循环
+                int j;
+                for(int j=0; j<input0Shape[2]; j++)
                 {
-                    //pos循环
-                    sum += input0Data->data()[k*input0Shape[1]*input0Shape[2]+i*input0Shape[2]+j]*input1Data->data()[k*input0Shape[1]+i];
+                    //head_dim循环
+                    float sum = 0.0f;
+                    for(int k=0; k<input0Shape[0]; k++)
+                    {
+                        //pos循环
+                        sum += input0Data->data()[k*input0Shape[1]*input0Shape[2]+i*input0Shape[2]+j]*input1Data->data()[k*input0Shape[1]+i];
+                    }
+                    outputData->data()[i*input0Shape[2]+j] = sum;
                 }
-                outputData->data()[i*input0Shape[2]+j] = sum;
             }
         }
     }

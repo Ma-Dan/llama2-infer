@@ -2,6 +2,7 @@
 #include "layer_register.h"
 #include "utils.h"
 #include "math.h"
+#include "omp.h"
 
 Posenc::Posenc()
 {
@@ -52,6 +53,7 @@ void Posenc::forward(vector<Tensor*> &input, vector<Tensor*> &output)
         {
             freqOffset = i*input[1]->get_shape()[1];
         }
+
         for(int j=0; j<outputShape[1]; j++)
         {
             for(int k=0; k<outputShape[2]/2; k++)

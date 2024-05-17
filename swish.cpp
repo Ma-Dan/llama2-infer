@@ -34,6 +34,7 @@ void Swish::forward(vector<Tensor*> &input, vector<Tensor*> &output)
     result->set_shape(input0Shape);
     vector<float>* outputData = result->get_data();
 
+    //#pragma omp parallel for
     for(int i=0; i<input0Data->size(); i++)
     {
         outputData->data()[i] = input0Data->data()[i] * (1.0f / (1.0f + expf(-input0Data->data()[i])));
